@@ -1,0 +1,57 @@
+<section class="min-h-screen bg-[#F7F4F0] text-[#1D1916] flex">
+
+    <!-- BARRA LATERAL -->
+    <aside class="w-[76px] bg-white border-r border-[#E8DDD6] flex flex-col items-center py-5 gap-4">
+
+        <div class="w-10 h-10 rounded-xl bg-[#4A352E] text-white flex items-center justify-center font-bold">
+            N
+        </div>
+
+        <a routerLink="/negocio/dashboard" routerLinkActive="bg-[#C09C75] text-white"
+            class="w-10 h-10 rounded-xl hover:bg-[#F1E7DF] flex items-center justify-center text-lg" title="Dashboard">
+            🏠
+        </a>
+
+        <a routerLink="/negocio/calendario" routerLinkActive="bg-[#C09C75] text-white"
+            class="w-10 h-10 rounded-xl hover:bg-[#F1E7DF] flex items-center justify-center text-lg" title="Calendario">
+            📅
+        </a>
+
+        <a routerLink="/negocio/personalizacion" routerLinkActive="bg-[#C09C75] text-white"
+            class="w-10 h-10 rounded-xl hover:bg-[#F1E7DF] flex items-center justify-center text-lg"
+            title="Personalización">
+            🎨
+        </a>
+
+        <a routerLink="/negocio/servicios" routerLinkActive="bg-[#C09C75] text-white"
+            class="w-10 h-10 rounded-xl hover:bg-[#F1E7DF] flex items-center justify-center text-lg" title="Servicios">
+            💇
+        </a>
+
+        <a routerLink="/negocio/configuracion" routerLinkActive="bg-[#C09C75] text-white"
+            class="w-10 h-10 rounded-xl hover:bg-[#F1E7DF] flex items-center justify-center text-lg mt-auto"
+            title="Configuración">
+            ⚙️
+        </a>
+
+    </aside>
+
+    <!-- CONTENIDO DINÁMICO -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+        <header class="h-[64px] bg-white border-b border-[#E8DDD6] px-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-lg font-bold">Nuvia</h1>
+                <p class="text-xs text-[#8B7670]">Panel profesional</p>
+            </div>
+
+            <div class="w-10 h-10 rounded-full bg-[#F1E7DF] flex items-center justify-center font-bold text-[#4A352E]">
+                SG
+            </div>
+        </header>
+
+        <router-outlet></router-outlet>
+
+    </div>
+
+</section>
