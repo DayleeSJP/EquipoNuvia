@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-
-
 export interface LoginRequest {
   email: string;
   password: string;
@@ -18,6 +16,14 @@ export interface LoginResponse {
   mensaje: string;
 }
 
+export interface RegistroClienteRequest {
+  nombre: string;
+  apellido: string;
+  telefono: string;
+  email: string;
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,6 +35,10 @@ export class AuthService {
 
   loginCliente(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login-cliente`, data);
+  }
+
+  registrarCliente(data: RegistroClienteRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/registro-cliente`, data);
   }
 
   guardarSesion(usuario: LoginResponse): void {
