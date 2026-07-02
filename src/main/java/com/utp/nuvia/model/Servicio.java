@@ -6,7 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "servicios_negocio")
+@Table(name = "servicios")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,25 +17,23 @@ public class Servicio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 150)
+    @ManyToOne
+    @JoinColumn(name = "peluqueria_id", nullable = false)
+    private Peluqueria peluqueria;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
+    @Column(nullable = false, length = 100)
     private String nombre;
 
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "tipo_tratamiento", length = 80)
-    private String tipoTratamiento;
-
-    @Column(name = "tipo_precio", length = 50)
-    private String tipoPrecio;
+    @Column(name = "duracion_min", nullable = false)
+    private Integer duracionMin;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
-
-    @Column(nullable = false, length = 50)
-    private String duracion;
-
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
 }

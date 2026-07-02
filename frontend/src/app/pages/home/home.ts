@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { CatalogoService, SalonCard } from '../../services/catalogo';
 
+/*
 interface SalonCard {
   nombre: string;
   direccion: string;
@@ -9,7 +11,7 @@ interface SalonCard {
   rating: string;
   imagen: string;
 }
-
+*/
 @Component({
   selector: 'app-home',
   imports: [CommonModule, RouterLink],
@@ -18,37 +20,68 @@ interface SalonCard {
 })
 export class Home implements OnInit {
 
-usuarioActual: any = null;
-menuPerfilAbierto = false;
+  usuarioActual: any = null;
+  menuPerfilAbierto = false;
 
-ngOnInit(): void {
-  const usuarioGuardado = localStorage.getItem('usuario');
+  constructor(
+    private catalogoService: CatalogoService,
+    private router: Router
+  ) { }
 
-  if (usuarioGuardado) {
-    this.usuarioActual = JSON.parse(usuarioGuardado);
+  verDetalle(card: SalonCard): void {
+    if (card.id) {
+      this.router.navigate(['/catalogo/detalle', card.id]);
+      return;
+    }
+
+    localStorage.setItem('salonSeleccionadoTemp', JSON.stringify(card));
+    this.router.navigate(['/catalogo/detalle']);
   }
-}
 
-toggleMenuPerfil(): void {
-  this.menuPerfilAbierto = !this.menuPerfilAbierto;
-}
+  ngOnInit(): void {
+    const usuarioGuardado = localStorage.getItem('usuario');
 
-cerrarSesion(): void {
-  localStorage.removeItem('usuario');
-  this.usuarioActual = null;
-  this.menuPerfilAbierto = false;
-}
+    if (usuarioGuardado) {
+      this.usuarioActual = JSON.parse(usuarioGuardado);
+    }
 
-inicialUsuario(): string {
-  if (!this.usuarioActual?.nombre) return 'U';
-  return this.usuarioActual.nombre.charAt(0).toUpperCase();
-}
+    this.cargarCatalogo();
+  }
 
-nombreCompleto(): string {
-  if (!this.usuarioActual) return '';
+  cargarCatalogo(): void {
+    this.catalogoService.listarPeluquerias().subscribe({
+      next: (data: SalonCard[]) => {
+        if (data.length > 0) {
+          this.recomendados = data;
+          this.nuevos = data;
+        }
+      },
+      error: () => {
+        console.log('No se pudo cargar el catálogo desde el backend. Se muestran datos de prueba.');
+      }
+    });
+  }
 
-  return `${this.usuarioActual.nombre} ${this.usuarioActual.apellido || ''}`;
-}
+  toggleMenuPerfil(): void {
+    this.menuPerfilAbierto = !this.menuPerfilAbierto;
+  }
+
+  cerrarSesion(): void {
+    localStorage.removeItem('usuario');
+    this.usuarioActual = null;
+    this.menuPerfilAbierto = false;
+  }
+
+  inicialUsuario(): string {
+    if (!this.usuarioActual?.nombre) return 'U';
+    return this.usuarioActual.nombre.charAt(0).toUpperCase();
+  }
+
+  nombreCompleto(): string {
+    if (!this.usuarioActual) return '';
+
+    return `${this.usuarioActual.nombre} ${this.usuarioActual.apellido || ''}`;
+  }
 
   recomendados: SalonCard[] = [
     {

@@ -11,12 +11,8 @@ import java.util.List;
 public class PersonalizacionNegocioRequest {
 
     private Integer usuarioId;
-    private String nombreNegocio;
-    private String direccion;
-    private String distrito;
     private String portadaImagen;
     private String sobreNosotros;
-
     private List<CategoriaRequest> categorias;
     private List<TrabajadorRequest> trabajadores;
 

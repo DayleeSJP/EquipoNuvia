@@ -25,8 +25,6 @@ public class DetallePeluqueriaResponse {
     public static class CategoriaDetalle {
         private Integer id;
         private String nombre;
-        private String descripcion;
-        private String color;
         private List<ServicioDetalle> servicios;
     }
 
@@ -37,8 +35,6 @@ public class DetallePeluqueriaResponse {
         private String nombre;
         private String descripcion;
         private Integer categoriaId;
-        private String tipoTratamiento;
-        private String tipoPrecio;
         private BigDecimal precio;
         private String duracion;
     }

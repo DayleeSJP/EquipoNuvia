@@ -153,7 +153,8 @@
 
                 <div class="relative">
                     <div #c1 class="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth cursor-grab">
-                        <article *ngFor="let card of recomendados" class="min-w-[240px]">
+                        <article *ngFor="let card of recomendados" (click)="verDetalle(card)"
+                            class="min-w-[240px] cursor-pointer">
                             <div class="relative h-[140px] rounded-[10px] overflow-hidden">
                                 <img [src]="card.imagen" [alt]="card.nombre" class="w-full h-full object-cover">
                                 <span
@@ -195,7 +196,8 @@
 
                 <div class="relative">
                     <div #c2 class="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth cursor-grab">
-                        <article *ngFor="let card of nuevos" class="min-w-[240px]">
+                        <article *ngFor="let card of nuevos" (click)="verDetalle(card)"
+                            class="min-w-[240px] cursor-pointer">
                             <div class="relative h-[140px] rounded-[10px] overflow-hidden">
                                 <img [src]="card.imagen" [alt]="card.nombre" class="w-full h-full object-cover">
                                 <span

@@ -15,16 +15,22 @@ public class Trabajador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name = "peluqueria_id", nullable = false)
+    private Peluqueria peluqueria;
+
     @Column(nullable = false, length = 100)
     private String nombre;
 
     @Column(nullable = false, length = 100)
     private String apellido;
 
-    @Column(nullable = false)
-    private Boolean activo = true;
+    @Column(length = 255)
+    private String foto;
 
-    @ManyToOne
-    @JoinColumn(name = "peluqueria_id", nullable = false)
-    private Peluqueria peluqueria;
+    @Column(length = 100)
+    private String especialidad;
+
+    @Column(nullable = false, length = 30)
+    private String estado;
 }

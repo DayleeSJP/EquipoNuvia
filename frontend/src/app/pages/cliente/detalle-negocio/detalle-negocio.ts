@@ -45,55 +45,68 @@ export class DetalleNegocio implements OnInit {
   trabajadores: Trabajador[] = [];
 
   constructor(
-  private router: Router,
-  private route: ActivatedRoute,
-  private catalogoService: CatalogoService
-) {}
+    private router: Router,
+    private route: ActivatedRoute,
+    private catalogoService: CatalogoService
+  ) { }
 
   ngOnInit(): void {
-  const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = Number(this.route.snapshot.paramMap.get('id'));
 
-  if (id) {
-    this.catalogoService.obtenerDetalle(id).subscribe({
-      next: (data: any) => {
-        this.nombreNegocio = data.nombreNegocio || 'Mi Negocio';
-        this.direccion = data.direccion || 'Dirección pendiente';
-        this.distrito = data.distrito || 'Lima';
-        this.portada = data.portada || '';
-        this.categorias = data.categorias || [];
-        this.trabajadores = data.trabajadores || [];
-        this.sobreNosotros = data.sobreNosotros || '';
-      },
-      error: () => {
-        this.cargarDetalleLocal();
-      }
-    });
+    if (id) {
+      this.catalogoService.obtenerDetalle(id).subscribe({
+        next: (data: any) => {
+          this.nombreNegocio = data.nombreNegocio || 'Mi Negocio';
+          this.direccion = data.direccion || 'Dirección pendiente';
+          this.distrito = data.distrito || 'Lima';
+          this.portada = data.portada || '';
+          this.categorias = data.categorias || [];
+          this.trabajadores = data.trabajadores || [];
+          this.sobreNosotros = data.sobreNosotros || '';
+        },
+        error: () => {
+          this.cargarDetalleLocal();
+        }
+      });
 
-    return;
+      return;
+    }
+
+    this.cargarDetalleLocal();
   }
 
-  this.cargarDetalleLocal();
-}
+  cargarDetalleLocal(): void {
+    const salonSeleccionado = localStorage.getItem('salonSeleccionadoTemp');
 
-cargarDetalleLocal(): void {
-  const negocioGuardado = localStorage.getItem('registroNegocioTemp');
-  const personalizacionGuardada = localStorage.getItem('personalizacionNegocioTemp');
+    if (salonSeleccionado) {
+      const salon = JSON.parse(salonSeleccionado);
 
-  if (negocioGuardado) {
-    const negocio = JSON.parse(negocioGuardado);
-    this.nombreNegocio = negocio.nombreNegocio || 'Mi Negocio';
-    this.direccion = negocio.direccion || 'Dirección pendiente';
-    this.distrito = negocio.distrito || 'Lima';
+      this.nombreNegocio = salon.nombre || 'Mi Negocio';
+      this.direccion = salon.direccion || 'Dirección pendiente';
+      this.distrito = '';
+      this.portada = salon.imagen || '';
+
+      return;
+    }
+
+    const negocioGuardado = localStorage.getItem('registroNegocioTemp');
+    const personalizacionGuardada = localStorage.getItem('personalizacionNegocioTemp');
+
+    if (negocioGuardado) {
+      const negocio = JSON.parse(negocioGuardado);
+      this.nombreNegocio = negocio.nombreNegocio || 'Mi Negocio';
+      this.direccion = negocio.direccion || 'Dirección pendiente';
+      this.distrito = negocio.distrito || 'Lima';
+    }
+
+    if (personalizacionGuardada) {
+      const personalizacion = JSON.parse(personalizacionGuardada);
+      this.portada = personalizacion.portada || '';
+      this.categorias = personalizacion.categorias || [];
+      this.trabajadores = personalizacion.trabajadores || [];
+      this.sobreNosotros = personalizacion.sobreNosotros || '';
+    }
   }
-
-  if (personalizacionGuardada) {
-    const personalizacion = JSON.parse(personalizacionGuardada);
-    this.portada = personalizacion.portada || '';
-    this.categorias = personalizacion.categorias || [];
-    this.trabajadores = personalizacion.trabajadores || [];
-    this.sobreNosotros = personalizacion.sobreNosotros || '';
-  }
-}
 
 
   totalServicios(): number {

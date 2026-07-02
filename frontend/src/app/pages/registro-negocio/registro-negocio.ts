@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { NegocioService } from '../../services/negocio';
+import { AuthService, LoginResponse } from '../../services/auth';
 
 @Component({
   selector: 'app-registro-negocio',
@@ -26,7 +28,11 @@ export class RegistroNegocio {
 
   error = '';
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private negocioService: NegocioService,
+    private authService: AuthService
+  ) {
     const usuarioGuardado = localStorage.getItem('usuario');
 
     if (usuarioGuardado) {
@@ -75,6 +81,37 @@ export class RegistroNegocio {
       return;
     }
 
+    const usuarioGuardado = localStorage.getItem('usuario');
+
+    if (usuarioGuardado) {
+      const usuario = JSON.parse(usuarioGuardado);
+      this.registrarNegocioEnBackend(usuario);
+      return;
+    }
+
+    if (!this.nombre || !this.apellido || !this.telefono || !this.email || !this.password) {
+      this.error = 'Completa tus datos personales.';
+      return;
+    }
+
+    this.authService.registrarCliente({
+      nombre: this.nombre,
+      apellido: this.apellido,
+      telefono: this.telefono,
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: (usuarioCreado: LoginResponse) => {
+        this.authService.guardarSesion(usuarioCreado);
+        this.registrarNegocioEnBackend(usuarioCreado);
+      },
+      error: (error) => {
+        this.error = error.error?.mensaje || 'No se pudo crear la cuenta.';
+      }
+    });
+  }
+
+  registrarNegocioEnBackend(usuario: any): void {
     const registroNegocio = {
       nombre: this.nombre,
       apellido: this.apellido,
@@ -85,10 +122,20 @@ export class RegistroNegocio {
       distrito: this.distrito
     };
 
-    localStorage.setItem('registroNegocioTemp', JSON.stringify(registroNegocio));
-
-    this.router.navigate(['/negocio/dashboard']);
-
+    this.negocioService.registrarNegocio({
+      usuarioId: usuario.id,
+      nombreNegocio: this.nombreNegocio,
+      direccion: this.direccion,
+      distrito: this.distrito
+    }).subscribe({
+      next: () => {
+        localStorage.setItem('registroNegocioTemp', JSON.stringify(registroNegocio));
+        this.router.navigate(['/negocio/dashboard']);
+      },
+      error: (error) => {
+        this.error = error.error?.mensaje || 'No se pudo registrar el negocio.';
+      }
+    });
   }
 
   volver(): void {

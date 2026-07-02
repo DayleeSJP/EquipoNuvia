@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "peluquerias")
@@ -21,32 +19,32 @@ public class Peluqueria {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario propietario;
+    private Usuario usuario;
 
     @Column(nullable = false, length = 150)
     private String nombre;
 
-    @Column(nullable = false, length = 200)
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
+
+    @Column(nullable = false, length = 255)
     private String direccion;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 100)
     private String distrito;
 
-    @Column(name = "portada_imagen", columnDefinition = "LONGTEXT")
-    private String portadaImagen;
+    @Column(length = 20)
+    private String telefono;
 
-    @Column(name = "sobre_nosotros", columnDefinition = "TEXT")
-    private String sobreNosotros;
+    @Column(name = "imagen_logo", columnDefinition = "LONGTEXT")
+    private String imagenLogo;
+
+    @Column(nullable = false, length = 30)
+    private String estado;
 
     @Column(nullable = false)
     private Boolean activa = true;
 
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro;
-
-    @OneToMany(mappedBy = "peluqueria", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Categoria> categorias = new ArrayList<>();
-
-    @OneToMany(mappedBy = "peluqueria", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Trabajador> trabajadores = new ArrayList<>();
 }

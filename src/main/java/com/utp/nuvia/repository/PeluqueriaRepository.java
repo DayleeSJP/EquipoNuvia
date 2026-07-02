@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PeluqueriaRepository extends JpaRepository<Peluqueria, Integer> {
 
-    Optional<Peluqueria> findByPropietarioId(Integer usuarioId);
+    Optional<Peluqueria> findByUsuarioId(Integer usuarioId);
 
-    List<Peluqueria> findByActivaTrue();
+    List<Peluqueria> findByEstado(String estado);
 }

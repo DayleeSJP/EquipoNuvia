@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface SalonCard {
-  id: number;
+  id?: number;
   nombre: string;
   direccion: string;
   tipo: string;

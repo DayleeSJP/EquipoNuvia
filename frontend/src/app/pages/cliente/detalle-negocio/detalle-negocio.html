@@ -152,7 +152,7 @@
           <div class="mt-5 pt-5 border-t border-neutral-200 space-y-3">
             <p class="text-sm text-neutral-600">
               <span class="font-medium text-black">Dirección:</span>
-              {{ direccion }}, {{ distrito }}
+              {{ direccion }} <span *ngIf="distrito">, {{ distrito }}</span>
             </p>
 
             <p class="text-sm text-neutral-600">

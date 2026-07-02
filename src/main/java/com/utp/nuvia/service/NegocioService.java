@@ -3,13 +3,10 @@ package com.utp.nuvia.service;
 import com.utp.nuvia.dto.CatalogoPeluqueriaResponse;
 import com.utp.nuvia.dto.DetallePeluqueriaResponse;
 import com.utp.nuvia.dto.PersonalizacionNegocioRequest;
-import com.utp.nuvia.model.Categoria;
-import com.utp.nuvia.model.Peluqueria;
-import com.utp.nuvia.model.Servicio;
-import com.utp.nuvia.model.Trabajador;
-import com.utp.nuvia.model.Usuario;
-import com.utp.nuvia.repository.PeluqueriaRepository;
-import com.utp.nuvia.repository.UsuarioRepository;
+import com.utp.nuvia.dto.RegistroNegocioRequest;
+import com.utp.nuvia.model.*;
+import com.utp.nuvia.repository.*;
+
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,161 +17,185 @@ import java.util.List;
 @Service
 public class NegocioService {
 
-    private final PeluqueriaRepository peluqueriaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final PeluqueriaRepository peluqueriaRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final ServicioRepository servicioRepository;
+    private final TrabajadorRepository trabajadorRepository;
 
     public NegocioService(
+            UsuarioRepository usuarioRepository,
             PeluqueriaRepository peluqueriaRepository,
-            UsuarioRepository usuarioRepository
+            CategoriaRepository categoriaRepository,
+            ServicioRepository servicioRepository,
+            TrabajadorRepository trabajadorRepository
     ) {
-        this.peluqueriaRepository = peluqueriaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.peluqueriaRepository = peluqueriaRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.servicioRepository = servicioRepository;
+        this.trabajadorRepository = trabajadorRepository;
     }
 
     @Transactional
-    public DetallePeluqueriaResponse guardarPersonalizacion(PersonalizacionNegocioRequest request) {
+    public DetallePeluqueriaResponse registrarNegocio(RegistroNegocioRequest request) {
 
         Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        Peluqueria peluqueria = peluqueriaRepository.findByPropietarioId(request.getUsuarioId())
+        Peluqueria peluqueria = peluqueriaRepository.findByUsuarioId(request.getUsuarioId())
                 .orElseGet(Peluqueria::new);
 
-        peluqueria.setPropietario(usuario);
+        peluqueria.setUsuario(usuario);
         peluqueria.setNombre(request.getNombreNegocio());
         peluqueria.setDireccion(request.getDireccion());
         peluqueria.setDistrito(request.getDistrito());
-        peluqueria.setPortadaImagen(request.getPortadaImagen());
-        peluqueria.setSobreNosotros(request.getSobreNosotros());
-        peluqueria.setActiva(true);
+        peluqueria.setEstado("ACTIVO");
+
+        if (peluqueria.getDescripcion() == null) {
+            peluqueria.setDescripcion("");
+        }
+
+        if (peluqueria.getImagenLogo() == null) {
+            peluqueria.setImagenLogo("");
+        }
 
         if (peluqueria.getFechaRegistro() == null) {
             peluqueria.setFechaRegistro(LocalDateTime.now());
         }
 
-        peluqueria.getCategorias().clear();
-        peluqueria.getTrabajadores().clear();
+        Peluqueria guardada = peluqueriaRepository.save(peluqueria);
+
+        return obtenerDetalle(guardada.getId());
+    }
+
+    @Transactional
+    public DetallePeluqueriaResponse guardarPersonalizacion(PersonalizacionNegocioRequest request) {
+
+        Peluqueria peluqueria = peluqueriaRepository.findByUsuarioId(request.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Primero debes registrar el negocio"));
+
+        peluqueria.setImagenLogo(request.getPortadaImagen());
+        peluqueria.setDescripcion(request.getSobreNosotros());
+        peluqueriaRepository.save(peluqueria);
+
+        servicioRepository.deleteByPeluqueriaId(peluqueria.getId());
+        trabajadorRepository.deleteByPeluqueriaId(peluqueria.getId());
 
         if (request.getCategorias() != null) {
             for (PersonalizacionNegocioRequest.CategoriaRequest categoriaRequest : request.getCategorias()) {
-                Categoria categoria = new Categoria();
-                categoria.setNombre(categoriaRequest.getNombre());
-                categoria.setDescripcion(categoriaRequest.getDescripcion());
-                categoria.setColor(categoriaRequest.getColor());
-                categoria.setPeluqueria(peluqueria);
+
+                Categoria categoria = categoriaRepository.findByNombre(categoriaRequest.getNombre())
+                        .orElseGet(() -> {
+                            Categoria nueva = new Categoria();
+                            nueva.setNombre(categoriaRequest.getNombre());
+                            return categoriaRepository.save(nueva);
+                        });
 
                 if (categoriaRequest.getServicios() != null) {
                     for (PersonalizacionNegocioRequest.ServicioRequest servicioRequest : categoriaRequest.getServicios()) {
                         Servicio servicio = new Servicio();
+                        servicio.setPeluqueria(peluqueria);
+                        servicio.setCategoria(categoria);
                         servicio.setNombre(servicioRequest.getNombre());
                         servicio.setDescripcion(servicioRequest.getDescripcion());
-                        servicio.setTipoTratamiento(servicioRequest.getTipoTratamiento());
-                        servicio.setTipoPrecio(servicioRequest.getTipoPrecio());
                         servicio.setPrecio(servicioRequest.getPrecio());
-                        servicio.setDuracion(servicioRequest.getDuracion());
-                        servicio.setCategoria(categoria);
+                        servicio.setDuracionMin(convertirDuracionAMinutos(servicioRequest.getDuracion()));
 
-                        categoria.getServicios().add(servicio);
+                        servicioRepository.save(servicio);
                     }
                 }
-
-                peluqueria.getCategorias().add(categoria);
             }
         }
 
         if (request.getTrabajadores() != null) {
             for (PersonalizacionNegocioRequest.TrabajadorRequest trabajadorRequest : request.getTrabajadores()) {
                 Trabajador trabajador = new Trabajador();
+                trabajador.setPeluqueria(peluqueria);
                 trabajador.setNombre(trabajadorRequest.getNombre());
                 trabajador.setApellido(trabajadorRequest.getApellido());
-                trabajador.setActivo(true);
-                trabajador.setPeluqueria(peluqueria);
+                trabajador.setEstado("ACTIVO");
 
-                peluqueria.getTrabajadores().add(trabajador);
+                trabajadorRepository.save(trabajador);
             }
         }
 
-        Peluqueria guardada = peluqueriaRepository.save(peluqueria);
-
-        return convertirDetalle(guardada);
+        return obtenerDetalle(peluqueria.getId());
     }
 
     public List<CatalogoPeluqueriaResponse> listarCatalogo() {
-        List<Peluqueria> peluquerias = peluqueriaRepository.findByActivaTrue();
-        List<CatalogoPeluqueriaResponse> respuesta = new ArrayList<>();
+        List<Peluqueria> peluquerias = peluqueriaRepository.findByEstado("ACTIVO");
+        List<CatalogoPeluqueriaResponse> response = new ArrayList<>();
 
         for (Peluqueria peluqueria : peluquerias) {
-            int totalServicios = peluqueria.getCategorias()
-                    .stream()
-                    .mapToInt(categoria -> categoria.getServicios().size())
-                    .sum();
+            int totalServicios = servicioRepository.findByPeluqueriaId(peluqueria.getId()).size();
 
-            respuesta.add(new CatalogoPeluqueriaResponse(
+            response.add(new CatalogoPeluqueriaResponse(
                     peluqueria.getId(),
                     peluqueria.getNombre(),
                     peluqueria.getDireccion() + ", " + peluqueria.getDistrito(),
                     "Peluquería · " + totalServicios + " servicios",
                     "4,8",
-                    peluqueria.getPortadaImagen()
+                    peluqueria.getImagenLogo()
             ));
         }
 
-        return respuesta;
+        return response;
     }
 
     public DetallePeluqueriaResponse obtenerDetalle(Integer id) {
         Peluqueria peluqueria = peluqueriaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Peluquería no encontrada"));
 
-        return convertirDetalle(peluqueria);
-    }
-
-    private DetallePeluqueriaResponse convertirDetalle(Peluqueria peluqueria) {
         DetallePeluqueriaResponse response = new DetallePeluqueriaResponse();
 
         response.setId(peluqueria.getId());
         response.setNombreNegocio(peluqueria.getNombre());
         response.setDireccion(peluqueria.getDireccion());
         response.setDistrito(peluqueria.getDistrito());
-        response.setPortada(peluqueria.getPortadaImagen());
-        response.setSobreNosotros(peluqueria.getSobreNosotros());
+        response.setPortada(peluqueria.getImagenLogo());
+        response.setSobreNosotros(peluqueria.getDescripcion());
 
-        List<DetallePeluqueriaResponse.CategoriaDetalle> categorias = new ArrayList<>();
+        List<Servicio> servicios = servicioRepository.findByPeluqueriaId(peluqueria.getId());
+        List<Categoria> categorias = categoriaRepository.findAll();
 
-        for (Categoria categoria : peluqueria.getCategorias()) {
-            DetallePeluqueriaResponse.CategoriaDetalle categoriaDetalle =
-                    new DetallePeluqueriaResponse.CategoriaDetalle();
+        List<DetallePeluqueriaResponse.CategoriaDetalle> categoriasDetalle = new ArrayList<>();
 
-            categoriaDetalle.setId(categoria.getId());
-            categoriaDetalle.setNombre(categoria.getNombre());
-            categoriaDetalle.setDescripcion(categoria.getDescripcion());
-            categoriaDetalle.setColor(categoria.getColor());
+        for (Categoria categoria : categorias) {
+            List<DetallePeluqueriaResponse.ServicioDetalle> serviciosCategoria = new ArrayList<>();
 
-            List<DetallePeluqueriaResponse.ServicioDetalle> servicios = new ArrayList<>();
+            for (Servicio servicio : servicios) {
+                if (servicio.getCategoria().getId().equals(categoria.getId())) {
+                    DetallePeluqueriaResponse.ServicioDetalle servicioDetalle =
+                            new DetallePeluqueriaResponse.ServicioDetalle();
 
-            for (Servicio servicio : categoria.getServicios()) {
-                DetallePeluqueriaResponse.ServicioDetalle servicioDetalle =
-                        new DetallePeluqueriaResponse.ServicioDetalle();
+                    servicioDetalle.setId(servicio.getId());
+                    servicioDetalle.setNombre(servicio.getNombre());
+                    servicioDetalle.setDescripcion(servicio.getDescripcion());
+                    servicioDetalle.setCategoriaId(categoria.getId());
+                    servicioDetalle.setPrecio(servicio.getPrecio());
+                    servicioDetalle.setDuracion(servicio.getDuracionMin() + " min");
 
-                servicioDetalle.setId(servicio.getId());
-                servicioDetalle.setNombre(servicio.getNombre());
-                servicioDetalle.setDescripcion(servicio.getDescripcion());
-                servicioDetalle.setCategoriaId(categoria.getId());
-                servicioDetalle.setTipoTratamiento(servicio.getTipoTratamiento());
-                servicioDetalle.setTipoPrecio(servicio.getTipoPrecio());
-                servicioDetalle.setPrecio(servicio.getPrecio());
-                servicioDetalle.setDuracion(servicio.getDuracion());
-
-                servicios.add(servicioDetalle);
+                    serviciosCategoria.add(servicioDetalle);
+                }
             }
 
-            categoriaDetalle.setServicios(servicios);
-            categorias.add(categoriaDetalle);
+            if (!serviciosCategoria.isEmpty()) {
+                DetallePeluqueriaResponse.CategoriaDetalle categoriaDetalle =
+                        new DetallePeluqueriaResponse.CategoriaDetalle();
+
+                categoriaDetalle.setId(categoria.getId());
+                categoriaDetalle.setNombre(categoria.getNombre());
+                categoriaDetalle.setServicios(serviciosCategoria);
+
+                categoriasDetalle.add(categoriaDetalle);
+            }
         }
 
-        List<DetallePeluqueriaResponse.TrabajadorDetalle> trabajadores = new ArrayList<>();
+        List<Trabajador> trabajadores = trabajadorRepository.findByPeluqueriaId(peluqueria.getId());
+        List<DetallePeluqueriaResponse.TrabajadorDetalle> trabajadoresDetalle = new ArrayList<>();
 
-        for (Trabajador trabajador : peluqueria.getTrabajadores()) {
+        for (Trabajador trabajador : trabajadores) {
             DetallePeluqueriaResponse.TrabajadorDetalle trabajadorDetalle =
                     new DetallePeluqueriaResponse.TrabajadorDetalle();
 
@@ -182,12 +203,26 @@ public class NegocioService {
             trabajadorDetalle.setNombre(trabajador.getNombre());
             trabajadorDetalle.setApellido(trabajador.getApellido());
 
-            trabajadores.add(trabajadorDetalle);
+            trabajadoresDetalle.add(trabajadorDetalle);
         }
 
-        response.setCategorias(categorias);
-        response.setTrabajadores(trabajadores);
+        response.setCategorias(categoriasDetalle);
+        response.setTrabajadores(trabajadoresDetalle);
 
         return response;
+    }
+
+    private Integer convertirDuracionAMinutos(String duracion) {
+        if (duracion == null || duracion.isBlank()) return 45;
+
+        if (duracion.contains("2 h")) return 120;
+        if (duracion.contains("1 h y 30")) return 90;
+        if (duracion.contains("1 h y 15")) return 75;
+        if (duracion.contains("1 h")) return 60;
+        if (duracion.contains("45")) return 45;
+        if (duracion.contains("35")) return 35;
+        if (duracion.contains("30")) return 30;
+
+        return 45;
     }
 }
