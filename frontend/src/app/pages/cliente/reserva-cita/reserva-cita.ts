@@ -92,25 +92,28 @@ export class ReservaCita implements OnInit {
   }
 
   seleccionarServicio(servicio: Servicio): void {
-    this.servicioSeleccionado = servicio;
+    this.servicioSeleccionado = this.servicioSeleccionado?.id === servicio.id ? null : servicio;
   }
 
   seleccionarSinPreferencia(): void {
-    this.sinPreferencia = true;
-    this.trabajadorSeleccionado = null;
+    this.sinPreferencia = !this.sinPreferencia;
+    if (this.sinPreferencia) {
+      this.trabajadorSeleccionado = null;
+    }
   }
 
   seleccionarTrabajador(trabajador: Trabajador): void {
-    this.trabajadorSeleccionado = trabajador;
+    this.trabajadorSeleccionado = this.trabajadorSeleccionado === trabajador ? null : trabajador;
     this.sinPreferencia = false;
   }
 
   seleccionarFecha(fecha: any): void {
-    this.fechaSeleccionada = `${fecha.dia} ${fecha.numero} ${fecha.mes}`;
+    const fechaStr = `${fecha.dia} ${fecha.numero} ${fecha.mes}`;
+    this.fechaSeleccionada = this.fechaSeleccionada === fechaStr ? '' : fechaStr;
   }
 
   seleccionarHora(hora: string): void {
-    this.horaSeleccionada = hora;
+    this.horaSeleccionada = this.horaSeleccionada === hora ? '' : hora;
   }
 
   puedeContinuar(): boolean {
@@ -162,9 +165,9 @@ export class ReservaCita implements OnInit {
       id: Date.now(),
       negocio: this.nombreNegocio,
       direccion: `${this.direccion}, ${this.distrito}`,
-      servicio: this.servicioSeleccionado?.nombre,
-      duracion: this.servicioSeleccionado?.duracion,
-      precio: this.servicioSeleccionado?.precio,
+      servicio: this.servicioSeleccionado?.nombre || 'Servicio sin nombre',
+      duracion: this.servicioSeleccionado?.duracion || '30 min',
+      precio: this.servicioSeleccionado?.precio || 0,
       trabajador: this.nombreTrabajador(),
       fecha: this.fechaSeleccionada,
       hora: this.horaSeleccionada,
@@ -180,6 +183,10 @@ export class ReservaCita implements OnInit {
 
     localStorage.setItem('citasClienteTemp', JSON.stringify(citas));
 
+    // Limpiar datos temporales
+    localStorage.removeItem('servicioSeleccionadoTemp');
+
+    // Navegar al historial
     this.router.navigate(['/cliente/mis-reservas']);
   }
 }

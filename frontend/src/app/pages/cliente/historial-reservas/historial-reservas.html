@@ -1,121 +1,135 @@
-<section class="min-h-screen bg-white text-black px-5 py-6">
+<section class="min-h-screen bg-[#F9F2EC] text-[#21120F] px-5 py-6">
 
   <div class="max-w-[1000px] mx-auto">
 
     <!-- HEADER -->
     <header class="flex items-center justify-between mb-8">
-      <a routerLink="/" class="text-2xl font-bold">Nuvia</a>
+      <a routerLink="/" class="text-2xl font-bold text-[#1D1916]">
+        Nuvia
+      </a>
 
-      <a routerLink="/catalogo/detalle" class="text-sm underline">
-        Nueva cita
+      <a routerLink="/catalogo/detalle" 
+         class="h-10 px-6 rounded-full bg-[#C09C75] text-white text-sm font-semibold flex items-center transition-all duration-200 hover:bg-[#D08E46] hover:scale-105 hover:shadow-lg">
+        + Nueva cita
       </a>
     </header>
 
     <div class="mb-8">
-      <p class="text-sm text-neutral-500">Bienvenido</p>
-      <h1 class="text-3xl font-bold uppercase">
+      <p class="text-sm text-[#7B6B66]">Bienvenido</p>
+      <h1 class="text-3xl font-bold uppercase text-[#1D1916]">
         {{ nombreCliente }}
       </h1>
     </div>
 
-    <nav class="flex gap-8 border-b border-neutral-200 mb-8 text-sm">
-      <button class="pb-3 border-b-2 border-black font-semibold">
+    <!-- NAVEGACIÓN -->
+    <nav class="flex gap-8 border-b border-[#EADFD7] mb-8 text-sm">
+      <button class="pb-3 border-b-2 border-[#C09C75] font-semibold text-[#1D1916] transition-colors hover:text-[#C09C75]">
         Mis citas
       </button>
 
-      <button class="pb-3 text-neutral-500">
-        Mi información
-      </button>
-
-      <a routerLink="/catalogo/detalle" class="pb-3 text-neutral-500">
-        Nueva cita
-      </a>
     </nav>
 
+    <!-- ENCABEZADO CITAS -->
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h2 class="text-2xl font-bold">Próximas citas</h2>
-        <p class="text-sm text-neutral-500 mt-2">
+        <h2 class="text-2xl font-bold text-[#1D1916]">Próximas citas</h2>
+        <p class="text-sm text-[#7B6B66] mt-2">
           Aquí aparecerán las reservas confirmadas por el cliente.
         </p>
       </div>
 
-      <p class="text-sm text-neutral-500">
+      <p class="text-sm text-[#7B6B66] bg-white px-4 py-2 rounded-full border border-[#EADFD7]">
         {{ citas.length }} cita(s)
       </p>
     </div>
 
-    <div *ngIf="citas.length === 0" class="rounded-3xl border border-neutral-200 p-8 text-center">
-      <p class="font-semibold">Aún no tienes citas registradas.</p>
-      <a routerLink="/catalogo/detalle" class="inline-block mt-4 h-10 px-5 rounded-full bg-black text-white text-sm font-semibold leading-10">
+    <!-- ESTADO VACÍO -->
+    <div *ngIf="citas.length === 0" 
+         class="rounded-3xl border-2 border-dashed border-[#D8C9BF] bg-white p-12 text-center transition-all duration-300 hover:border-[#C09C75]">
+      <div class="text-6xl mb-4">📅</div>
+      <p class="font-semibold text-[#21120F] text-lg">Aún no tienes citas registradas.</p>
+      <p class="text-sm text-[#7B6B66] mt-2">Reserva tu primera cita y comienza a disfrutar</p>
+      <a routerLink="/catalogo/detalle" 
+         class="inline-block mt-6 h-12 px-8 rounded-full bg-[#C09C75] text-white text-sm font-semibold leading-12 transition-all duration-200 hover:bg-[#D08E46] hover:scale-105 hover:shadow-lg">
         Reservar una cita
       </a>
     </div>
 
+    <!-- LISTA DE CITAS -->
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <article
-        *ngFor="let cita of citas"
-        class="rounded-3xl border border-neutral-200 p-5 shadow-sm">
+      <article *ngFor="let cita of citas" 
+               class="group rounded-3xl border border-[#EADFD7] bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-[#C09C75] hover:-translate-y-1 cursor-pointer">
 
-        <p class="text-sm font-bold uppercase mb-4">
+        <p class="text-sm font-bold uppercase text-[#C09C75] mb-4 group-hover:text-[#D08E46] transition-colors">
           {{ cita.servicio }}
         </p>
 
-        <div class="space-y-3 text-sm border-t border-neutral-200 pt-4">
+        <div class="space-y-3 text-sm border-t border-[#EADFD7] pt-4">
 
           <div class="flex justify-between gap-4">
-            <span class="text-neutral-500">Negocio</span>
-            <span class="font-semibold text-right">{{ cita.negocio }}</span>
+            <span class="text-[#7B6B66]">Negocio</span>
+            <span class="font-semibold text-[#21120F] text-right">{{ cita.negocio }}</span>
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-neutral-500">Fecha</span>
-            <span class="font-semibold">{{ cita.fecha }}</span>
+            <span class="text-[#7B6B66]">Fecha</span>
+            <span class="font-semibold text-[#21120F]">{{ cita.fecha }}</span>
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-neutral-500">Hora</span>
-            <span class="font-semibold">{{ cita.hora }}</span>
+            <span class="text-[#7B6B66]">Hora</span>
+            <span class="font-semibold text-[#21120F]">{{ cita.hora }}</span>
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-neutral-500">Profesional</span>
-            <span class="font-semibold text-right">{{ cita.trabajador }}</span>
+            <span class="text-[#7B6B66]">Profesional</span>
+            <span class="font-semibold text-[#21120F] text-right">{{ cita.trabajador }}</span>
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-neutral-500">Precio</span>
-            <span class="font-semibold">S/ {{ cita.precio }}</span>
+            <span class="text-[#7B6B66]">Precio</span>
+            <span class="font-semibold text-[#C09C75]">S/ {{ cita.precio }}</span>
           </div>
 
           <div class="flex justify-between gap-4">
-            <span class="text-neutral-500">Estado</span>
-            <span
-              class="px-3 py-1 rounded-full text-xs font-semibold"
-              [class.bg-black]="cita.estado === 'Confirmada'"
-              [class.text-white]="cita.estado === 'Confirmada'"
-              [class.bg-neutral-200]="cita.estado !== 'Confirmada'">
+            <span class="text-[#7B6B66]">Estado</span>
+            <span class="px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300"
+                  [class.bg-[#C09C75]]="cita.estado === 'Confirmada'"
+                  [class.text-white]="cita.estado === 'Confirmada'"
+                  [class.bg-[#EADFD7]]="cita.estado === 'Cancelada'"
+                  [class.text-[#7B6B66]]="cita.estado === 'Cancelada'"
+                  [class.bg-[#F9F2EC]]="cita.estado !== 'Confirmada' && cita.estado !== 'Cancelada'">
               {{ cita.estado }}
             </span>
           </div>
 
         </div>
 
-        <div class="mt-5 flex items-center justify-between border-t border-neutral-200 pt-4">
-          <button class="text-sm underline">
-            Añadir al calendario
+        <!-- ACCIONES -->
+        <div class="mt-5 flex items-center justify-between border-t border-[#EADFD7] pt-4">
+          <button class="text-sm text-[#7B6B66] transition-colors hover:text-[#C09C75] hover:underline">
+            📅 Añadir al calendario
           </button>
 
-          <button
-            type="button"
-            (click)="cancelarCita(cita.id)"
-            class="text-sm underline"
-            [disabled]="cita.estado === 'Cancelada'">
-            Cancelar
+          <button type="button"
+                  (click)="cancelarCita(cita.id)"
+                  class="text-sm text-[#7B6B66] transition-all duration-200 hover:text-[#D08E46] hover:underline"
+                  [disabled]="cita.estado === 'Cancelada'"
+                  [class.opacity-50]="cita.estado === 'Cancelada'"
+                  [class.cursor-not-allowed]="cita.estado === 'Cancelada'">
+            {{ cita.estado === 'Cancelada' ? 'Cancelada' : 'Cancelar' }}
           </button>
         </div>
 
       </article>
+    </div>
+
+    <!-- BOTÓN VOLVER AL INICIO -->
+    <div class="mt-10 text-center">
+      <a routerLink="/" 
+         class="inline-flex items-center gap-2 text-sm text-[#C09C75] font-semibold transition-all duration-200 hover:text-[#D08E46] hover:scale-105">
+        ← Volver al inicio
+      </a>
     </div>
 
   </div>
