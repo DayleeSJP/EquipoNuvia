@@ -1,5 +1,7 @@
 package com.utp.nuvia.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 import com.utp.nuvia.dto.LoginRequest;
@@ -10,10 +12,10 @@ import com.utp.nuvia.model.Usuario;
 import com.utp.nuvia.repository.RolRepository;
 import com.utp.nuvia.repository.UsuarioRepository;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AuthService {
+
+    private static final String ROL_CLIENTE = "CLIENTE";
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
@@ -35,7 +37,11 @@ public class AuthService {
             throw new RuntimeException("Correo o contraseña incorrectos");
         }
 
-        if (!usuario.getRol().getNombre().equalsIgnoreCase("CLIENTE")) {
+        if (usuario.getRol() == null || usuario.getRol().getNombre() == null) {
+            throw new RuntimeException("El usuario no tiene rol asignado");
+        }
+
+        if (!usuario.getRol().getNombre().equalsIgnoreCase(ROL_CLIENTE)) {
             throw new RuntimeException("Este login es solo para clientes");
         }
 
@@ -56,8 +62,7 @@ public class AuthService {
             throw new RuntimeException("El correo ya está registrado");
         }
 
-        Rol rolCliente = rolRepository.findByNombre("CLIENTE")
-                .orElseThrow(() -> new RuntimeException("No existe el rol CLIENTE"));
+        Rol rolCliente = obtenerOCrearRol(ROL_CLIENTE);
 
         Usuario usuario = new Usuario();
         usuario.setNombre(request.getNombre());
@@ -79,5 +84,14 @@ public class AuthService {
                 usuarioGuardado.getRol().getNombre(),
                 "Cliente registrado correctamente"
         );
+    }
+
+    private Rol obtenerOCrearRol(String nombreRol) {
+        return rolRepository.findByNombre(nombreRol)
+                .orElseGet(() -> {
+                    Rol rol = new Rol();
+                    rol.setNombre(nombreRol);
+                    return rolRepository.save(rol);
+                });
     }
 }
