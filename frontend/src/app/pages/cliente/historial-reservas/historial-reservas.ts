@@ -26,14 +26,19 @@ export class HistorialReservas implements OnInit {
   }
 
   cancelarCita(id: number): void {
-    this.citas = this.citas.map(cita => {
-      if (cita.id === id) {
-        return { ...cita, estado: 'Cancelada' };
+    const cita = this.citas.find(c => c.id === id);
+    
+    if (cita && cita.estado !== 'Cancelada') {
+      if (confirm(`¿Cancelar la cita de ${cita.servicio}?`)) {
+        this.citas = this.citas.map(cita => {
+          if (cita.id === id) {
+            return { ...cita, estado: 'Cancelada' };
+          }
+          return cita;
+        });
+        
+        localStorage.setItem('citasClienteTemp', JSON.stringify(this.citas));
       }
-
-      return cita;
-    });
-
-    localStorage.setItem('citasClienteTemp', JSON.stringify(this.citas));
+    }
   }
 }
