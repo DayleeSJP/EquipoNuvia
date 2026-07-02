@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NegocioService } from '../../../services/negocio';
 
 interface Servicio {
   id: number;
@@ -39,6 +40,8 @@ export class PersonalizacionNegocio {
 
   mostrarModalCategoria = false;
   mostrarModalServicio = false;
+
+  constructor(private negocioService: NegocioService) { }
 
   categoriaSeleccionada: number | 'todas' = 'todas';
 
@@ -260,15 +263,59 @@ export class PersonalizacionNegocio {
   }
 
   guardarCambios(): void {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    const negocioGuardado = localStorage.getItem('registroNegocioTemp');
+
+    if (!usuarioGuardado) {
+      alert('Primero debes iniciar sesión.');
+      return;
+    }
+
+    if (!negocioGuardado) {
+      alert('Primero debes registrar los datos principales del negocio.');
+      return;
+    }
+
+    const usuario = JSON.parse(usuarioGuardado);
+    const negocio = JSON.parse(negocioGuardado);
+
     const personalizacion = {
-      portada: this.portadaPreview,
-      categorias: this.categorias,
-      trabajadores: this.trabajadores,
-      sobreNosotros: this.sobreNosotros
+      usuarioId: usuario.id,
+      nombreNegocio: negocio.nombreNegocio,
+      direccion: negocio.direccion,
+      distrito: negocio.distrito,
+      portadaImagen: this.portadaPreview,
+      sobreNosotros: this.sobreNosotros,
+      categorias: this.categorias.map(categoria => ({
+        nombre: categoria.nombre,
+        descripcion: categoria.descripcion,
+        color: categoria.color,
+        servicios: categoria.servicios.map(servicio => ({
+          nombre: servicio.nombre,
+          descripcion: servicio.descripcion,
+          tipoTratamiento: servicio.tipoTratamiento,
+          tipoPrecio: servicio.tipoPrecio,
+          precio: servicio.precio,
+          duracion: servicio.duracion
+        }))
+      })),
+      trabajadores: this.trabajadores
     };
 
-    localStorage.setItem('personalizacionNegocioTemp', JSON.stringify(personalizacion));
+    this.negocioService.guardarPersonalizacion(personalizacion).subscribe({
+      next: () => {
+        localStorage.setItem('personalizacionNegocioTemp', JSON.stringify({
+          portada: this.portadaPreview,
+          categorias: this.categorias,
+          trabajadores: this.trabajadores,
+          sobreNosotros: this.sobreNosotros
+        }));
 
-    alert('Personalización guardada correctamente.');
+        alert('Personalización guardada correctamente.');
+      },
+      error: (error) => {
+        alert(error.error?.mensaje || 'No se pudo guardar la personalización.');
+      }
+    });
   }
 }

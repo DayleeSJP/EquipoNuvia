@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 interface Servicio {
   id: number;
@@ -28,7 +28,7 @@ interface Trabajador {
 
 @Component({
   selector: 'app-reserva-cita',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './reserva-cita.html',
   styleUrl: './reserva-cita.css'
 })

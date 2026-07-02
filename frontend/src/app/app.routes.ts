@@ -36,15 +36,13 @@ export const routes: Routes = [
         component: RegistroNegocio
     },
 
-    {
-        path: 'catalogo/detalle',
-        component: DetalleNegocio
-    },
+    { path: 'catalogo/detalle', component: DetalleNegocio },
+    { path: 'catalogo/detalle/:id', component: DetalleNegocio },
 
     { path: 'cliente/reserva', component: ReservaCita },
     { path: 'cliente/mis-reservas', component: HistorialReservas },
 
-    
+
 
 
     {

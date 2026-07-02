@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CatalogoService } from '../../../services/catalogo';
 
 interface Servicio {
   id: number;
@@ -42,27 +43,58 @@ export class DetalleNegocio implements OnInit {
 
   categorias: Categoria[] = [];
   trabajadores: Trabajador[] = [];
-  constructor(private router: Router) { }
+
+  constructor(
+  private router: Router,
+  private route: ActivatedRoute,
+  private catalogoService: CatalogoService
+) {}
 
   ngOnInit(): void {
-    const negocioGuardado = localStorage.getItem('registroNegocioTemp');
-    const personalizacionGuardada = localStorage.getItem('personalizacionNegocioTemp');
+  const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (negocioGuardado) {
-      const negocio = JSON.parse(negocioGuardado);
-      this.nombreNegocio = negocio.nombreNegocio || 'Mi Negocio';
-      this.direccion = negocio.direccion || 'Dirección pendiente';
-      this.distrito = negocio.distrito || 'Lima';
-    }
+  if (id) {
+    this.catalogoService.obtenerDetalle(id).subscribe({
+      next: (data: any) => {
+        this.nombreNegocio = data.nombreNegocio || 'Mi Negocio';
+        this.direccion = data.direccion || 'Dirección pendiente';
+        this.distrito = data.distrito || 'Lima';
+        this.portada = data.portada || '';
+        this.categorias = data.categorias || [];
+        this.trabajadores = data.trabajadores || [];
+        this.sobreNosotros = data.sobreNosotros || '';
+      },
+      error: () => {
+        this.cargarDetalleLocal();
+      }
+    });
 
-    if (personalizacionGuardada) {
-      const personalizacion = JSON.parse(personalizacionGuardada);
-      this.portada = personalizacion.portada || '';
-      this.categorias = personalizacion.categorias || [];
-      this.trabajadores = personalizacion.trabajadores || [];
-      this.sobreNosotros = personalizacion.sobreNosotros || '';
-    }
+    return;
   }
+
+  this.cargarDetalleLocal();
+}
+
+cargarDetalleLocal(): void {
+  const negocioGuardado = localStorage.getItem('registroNegocioTemp');
+  const personalizacionGuardada = localStorage.getItem('personalizacionNegocioTemp');
+
+  if (negocioGuardado) {
+    const negocio = JSON.parse(negocioGuardado);
+    this.nombreNegocio = negocio.nombreNegocio || 'Mi Negocio';
+    this.direccion = negocio.direccion || 'Dirección pendiente';
+    this.distrito = negocio.distrito || 'Lima';
+  }
+
+  if (personalizacionGuardada) {
+    const personalizacion = JSON.parse(personalizacionGuardada);
+    this.portada = personalizacion.portada || '';
+    this.categorias = personalizacion.categorias || [];
+    this.trabajadores = personalizacion.trabajadores || [];
+    this.sobreNosotros = personalizacion.sobreNosotros || '';
+  }
+}
+
 
   totalServicios(): number {
     return this.categorias.reduce((total, categoria) => total + categoria.servicios.length, 0);
