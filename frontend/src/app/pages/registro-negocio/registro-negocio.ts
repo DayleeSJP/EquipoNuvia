@@ -129,6 +129,13 @@ export class RegistroNegocio {
       distrito: this.distrito
     }).subscribe({
       next: () => {
+        const negocio = {
+          nombreNegocio: this.nombreNegocio,
+          nombre: this.nombre,
+          apellido: this.apellido
+        };
+
+        localStorage.setItem('negocio', JSON.stringify(negocio));
         localStorage.setItem('registroNegocioTemp', JSON.stringify(registroNegocio));
         this.router.navigate(['/negocio/dashboard']);
       },

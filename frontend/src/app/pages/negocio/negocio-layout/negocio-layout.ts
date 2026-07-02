@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -8,4 +8,21 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   templateUrl: './negocio-layout.html',
   styleUrl: './negocio-layout.css',
 })
-export class NegocioLayout {}
+export class NegocioLayout implements OnInit {
+  negocioActual: any = null;
+
+  ngOnInit(): void {
+    const negocio = localStorage.getItem('negocio');
+    if (negocio) {
+      this.negocioActual = JSON.parse(negocio);
+    }
+  }
+
+  inicialNegocio(): string {
+    if (!this.negocioActual?.nombreNegocio) {
+      return 'SG';
+    }
+
+    return this.negocioActual.nombreNegocio.charAt(0).toUpperCase();
+  }
+}
