@@ -1,0 +1,122 @@
+<section class="min-h-screen bg-white text-black px-5 py-6">
+
+  <div class="max-w-[1000px] mx-auto">
+
+    <!-- HEADER -->
+    <header class="flex items-center justify-between mb-8">
+      <a routerLink="/" class="text-2xl font-bold">Nuvia</a>
+
+      <a routerLink="/catalogo/detalle" class="text-sm underline">
+        Nueva cita
+      </a>
+    </header>
+
+    <div class="mb-8">
+      <p class="text-sm text-neutral-500">Bienvenido</p>
+      <h1 class="text-3xl font-bold uppercase">
+        {{ nombreCliente }}
+      </h1>
+    </div>
+
+    <nav class="flex gap-8 border-b border-neutral-200 mb-8 text-sm">
+      <button class="pb-3 border-b-2 border-black font-semibold">
+        Mis citas
+      </button>
+
+      <button class="pb-3 text-neutral-500">
+        Mi información
+      </button>
+
+      <a routerLink="/catalogo/detalle" class="pb-3 text-neutral-500">
+        Nueva cita
+      </a>
+    </nav>
+
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-2xl font-bold">Próximas citas</h2>
+        <p class="text-sm text-neutral-500 mt-2">
+          Aquí aparecerán las reservas confirmadas por el cliente.
+        </p>
+      </div>
+
+      <p class="text-sm text-neutral-500">
+        {{ citas.length }} cita(s)
+      </p>
+    </div>
+
+    <div *ngIf="citas.length === 0" class="rounded-3xl border border-neutral-200 p-8 text-center">
+      <p class="font-semibold">Aún no tienes citas registradas.</p>
+      <a routerLink="/catalogo/detalle" class="inline-block mt-4 h-10 px-5 rounded-full bg-black text-white text-sm font-semibold leading-10">
+        Reservar una cita
+      </a>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <article
+        *ngFor="let cita of citas"
+        class="rounded-3xl border border-neutral-200 p-5 shadow-sm">
+
+        <p class="text-sm font-bold uppercase mb-4">
+          {{ cita.servicio }}
+        </p>
+
+        <div class="space-y-3 text-sm border-t border-neutral-200 pt-4">
+
+          <div class="flex justify-between gap-4">
+            <span class="text-neutral-500">Negocio</span>
+            <span class="font-semibold text-right">{{ cita.negocio }}</span>
+          </div>
+
+          <div class="flex justify-between gap-4">
+            <span class="text-neutral-500">Fecha</span>
+            <span class="font-semibold">{{ cita.fecha }}</span>
+          </div>
+
+          <div class="flex justify-between gap-4">
+            <span class="text-neutral-500">Hora</span>
+            <span class="font-semibold">{{ cita.hora }}</span>
+          </div>
+
+          <div class="flex justify-between gap-4">
+            <span class="text-neutral-500">Profesional</span>
+            <span class="font-semibold text-right">{{ cita.trabajador }}</span>
+          </div>
+
+          <div class="flex justify-between gap-4">
+            <span class="text-neutral-500">Precio</span>
+            <span class="font-semibold">S/ {{ cita.precio }}</span>
+          </div>
+
+          <div class="flex justify-between gap-4">
+            <span class="text-neutral-500">Estado</span>
+            <span
+              class="px-3 py-1 rounded-full text-xs font-semibold"
+              [class.bg-black]="cita.estado === 'Confirmada'"
+              [class.text-white]="cita.estado === 'Confirmada'"
+              [class.bg-neutral-200]="cita.estado !== 'Confirmada'">
+              {{ cita.estado }}
+            </span>
+          </div>
+
+        </div>
+
+        <div class="mt-5 flex items-center justify-between border-t border-neutral-200 pt-4">
+          <button class="text-sm underline">
+            Añadir al calendario
+          </button>
+
+          <button
+            type="button"
+            (click)="cancelarCita(cita.id)"
+            class="text-sm underline"
+            [disabled]="cita.estado === 'Cancelada'">
+            Cancelar
+          </button>
+        </div>
+
+      </article>
+    </div>
+
+  </div>
+</section>

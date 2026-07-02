@@ -7,21 +7,22 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface LoginResponse {
-  id: number;
-  nombre: string;
-  apellido: string;
-  email: string;
-  rol: string;
-  mensaje: string;
-}
-
 export interface RegistroClienteRequest {
   nombre: string;
   apellido: string;
   telefono: string;
   email: string;
   password: string;
+}
+
+export interface LoginResponse {
+  id: number;
+  nombre: string;
+  apellido: string;
+  telefono: string;
+  email: string;
+  rol: string;
+  mensaje: string;
 }
 
 @Injectable({

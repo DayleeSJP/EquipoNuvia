@@ -30,6 +30,11 @@ export class RegistroCliente {
     this.error = '';
     this.mensaje = '';
 
+    if (!this.nombre || !this.apellido || !this.telefono || !this.email || !this.password) {
+      this.error = 'Completa todos los campos.';
+      return;
+    }
+
     this.authService.registrarCliente({
       nombre: this.nombre,
       apellido: this.apellido,
@@ -37,15 +42,16 @@ export class RegistroCliente {
       email: this.email,
       password: this.password
     }).subscribe({
-      next: () => {
-        this.mensaje = 'Cuenta creada correctamente';
+      next: (response) => {
+        this.authService.guardarSesion(response);
+        this.mensaje = response.mensaje;
 
         setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 1000);
+          this.router.navigate(['/']);
+        }, 800);
       },
       error: (error) => {
-        this.error = error.error?.mensaje || 'No se pudo registrar el cliente';
+        this.error = error.error?.mensaje || 'No se pudo registrar el cliente.';
       }
     });
   }

@@ -8,6 +8,10 @@ import { NegocioLayout } from './pages/negocio/negocio-layout/negocio-layout';
 import { DashboardNegocio } from './pages/negocio/dashboard-negocio/dashboard-negocio';
 import { CalendarioNegocio } from './pages/negocio/calendario-negocio/calendario-negocio'
 import { PersonalizacionNegocio } from './pages/negocio/personalizacion-negocio/personalizacion-negocio';
+import { DetalleNegocio } from './pages/cliente/detalle-negocio/detalle-negocio';
+import { ReservaCita } from './pages/cliente/reserva-cita/reserva-cita';
+import { HistorialReservas } from './pages/cliente/historial-reservas/historial-reservas';
+
 
 
 export const routes: Routes = [
@@ -31,6 +35,18 @@ export const routes: Routes = [
         path: 'registro-negocio',
         component: RegistroNegocio
     },
+
+    {
+        path: 'catalogo/detalle',
+        component: DetalleNegocio
+    },
+
+    { path: 'cliente/reserva', component: ReservaCita },
+    { path: 'cliente/mis-reservas', component: HistorialReservas },
+
+    
+
+
     {
         path: 'negocio',
         component: NegocioLayout,

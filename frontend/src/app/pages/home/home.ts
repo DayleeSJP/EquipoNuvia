@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -16,7 +16,39 @@ interface SalonCard {
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home {
+export class Home implements OnInit {
+
+usuarioActual: any = null;
+menuPerfilAbierto = false;
+
+ngOnInit(): void {
+  const usuarioGuardado = localStorage.getItem('usuario');
+
+  if (usuarioGuardado) {
+    this.usuarioActual = JSON.parse(usuarioGuardado);
+  }
+}
+
+toggleMenuPerfil(): void {
+  this.menuPerfilAbierto = !this.menuPerfilAbierto;
+}
+
+cerrarSesion(): void {
+  localStorage.removeItem('usuario');
+  this.usuarioActual = null;
+  this.menuPerfilAbierto = false;
+}
+
+inicialUsuario(): string {
+  if (!this.usuarioActual?.nombre) return 'U';
+  return this.usuarioActual.nombre.charAt(0).toUpperCase();
+}
+
+nombreCompleto(): string {
+  if (!this.usuarioActual) return '';
+
+  return `${this.usuarioActual.nombre} ${this.usuarioActual.apellido || ''}`;
+}
 
   recomendados: SalonCard[] = [
     {

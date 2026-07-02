@@ -87,7 +87,8 @@ export class RegistroNegocio {
 
     localStorage.setItem('registroNegocioTemp', JSON.stringify(registroNegocio));
 
-    this.router.navigate(['/dashboard-negocio']);
+    this.router.navigate(['/negocio/dashboard']);
+
   }
 
   volver(): void {

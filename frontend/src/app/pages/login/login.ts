@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,10 @@ export class Login {
   error: string = '';
   mensaje: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   login(): void {
     this.error = '';
@@ -30,6 +33,10 @@ export class Login {
       next: (response) => {
         this.authService.guardarSesion(response);
         this.mensaje = `Bienvenida, ${response.nombre}`;
+
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 700);
       },
       error: (error) => {
         this.error = error.error?.mensaje || 'Correo o contraseña incorrectos';

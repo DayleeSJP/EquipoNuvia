@@ -2,41 +2,92 @@
 
     <!-- SECCIÓN 1 -->
     <section class="min-h-screen bg-[#F9F2EC] flex flex-col overflow-hidden">
-        <header class="h-[62px] px-6 sm:px-11 flex items-center justify-between">
-            <div class="text-[18px] font-bold">Nuvia</div>
+        <header class="h-[68px] bg-[#F9F2EC] border-b border-[#EADFD7]">
+            <div class="max-w-[1280px] mx-auto h-full px-6 flex items-center justify-between">
 
-            <nav class="hidden md:flex gap-8 text-[13px] text-[#7B6B66]">
-                <a class="text-[#C98044] underline underline-offset-2" href="#">Inicio</a>
-                <a href="#clientes">Para Clientes</a>
-                <a href="#negocios">Para Negocios</a>
-            </nav>
-
-            <div class="hidden md:flex items-center gap-3 text-[13px]">
-                <a routerLink="/registro-negocio"
-                    class="h-8 px-5 rounded-full border border-[#D8C9BF] text-[#7B6B66] flex items-center">
-                    Registra tu negocio
+                <!-- LOGO -->
+                <a routerLink="/" class="text-[22px] font-bold text-[#1D1916]">
+                    Nuvia
                 </a>
 
-                <a routerLink="/seleccion-usuario" class="text-[#6F625D] cursor-pointer">
-                    Iniciar sesión
-                </a>
+                <!-- NAV CENTRO -->
+                <nav class="hidden md:flex gap-8 text-[14px] text-[#7B6B66]">
+                    <a class="text-[#C98044] underline underline-offset-2" href="#">Inicio</a>
+                    <a href="#clientes">Para Clientes</a>
+                    <a href="#negocios">Para Negocios</a>
+                </nav>
 
-                <a routerLink="/registro-cliente"
-                    class="h-8 px-5 rounded-full bg-[#4A352E] text-white font-semibold flex items-center">
-                    Registro
-                </a>
+                <!-- DERECHA -->
+                <div class="hidden md:flex items-center gap-3 text-[14px] relative">
+
+                    <a routerLink="/registro-negocio"
+                        class="h-10 px-6 rounded-full border border-[#D8C9BF] text-[#7B6B66] flex items-center bg-[#F9F2EC]">
+                        Registra tu negocio
+                    </a>
+
+                    <!-- SI NO HAY SESIÓN -->
+                    <ng-container *ngIf="!usuarioActual">
+                        <a routerLink="/seleccion-usuario" class="text-[#6F625D] cursor-pointer">
+                            Iniciar sesión
+                        </a>
+
+                        <a routerLink="/registro-cliente"
+                            class="h-10 px-6 rounded-full bg-[#4A352E] text-white font-semibold flex items-center">
+                            Registro
+                        </a>
+                    </ng-container>
+
+                    <!-- SI HAY SESIÓN -->
+                    <div *ngIf="usuarioActual" class="relative">
+                        <button type="button" (click)="toggleMenuPerfil()"
+                            class="h-11 pl-1 pr-4 rounded-full border border-[#D8C9BF] bg-white flex items-center gap-2 shadow-sm">
+
+                            <span
+                                class="w-9 h-9 rounded-full bg-[#C09C75] text-white flex items-center justify-center font-bold">
+                                {{ inicialUsuario() }}
+                            </span>
+
+                            <span class="text-[#4A352E] text-[13px]">
+                                {{ menuPerfilAbierto ? '⌃' : '⌄' }}
+                            </span>
+                        </button>
+
+                        <!-- MENÚ PERFIL -->
+                        <div *ngIf="menuPerfilAbierto"
+                            class="absolute right-0 top-14 w-[240px] bg-white rounded-2xl shadow-xl border border-[#EFE3DC] p-4 z-50">
+
+                            <p class="font-bold text-[#1D1916] text-[15px] mb-3">
+                                {{ nombreCompleto() }}
+                            </p>
+
+                            <a routerLink="/cliente/mis-reservas"
+                                class="flex items-center gap-3 h-9 rounded-xl px-2 text-[#4A352E] hover:bg-[#F9F2EC]">
+                                <span>📅</span>
+                                <span>Historial</span>
+                            </a>
+
+                            <button type="button" (click)="cerrarSesion()"
+                                class="mt-2 w-full flex items-center gap-3 h-9 rounded-xl px-2 text-left text-red-500 hover:bg-red-50">
+                                <span>↪</span>
+                                <span>Cerrar sesión</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </header>
 
         <div class="flex-1 flex items-center justify-center px-5">
             <div class="max-w-[690px] text-center -translate-y-5">
-                <p class="text-[10px] tracking-[6px] uppercase text-[#C98044] mb-5">
+                <p class="text-[10px] tracking-[6px] uppercase text-[#745A39] mb-5">
                     El futuro de la estética en Lima
                 </p>
 
                 <h1 class="text-[34px] sm:text-[43px] leading-[1.02] font-extrabold tracking-[-1.7px]">
                     Reserva tu cita en las
-                    <span class="text-[#D2924B]">mejores peluquerías</span>
+                    <span class="text-[#745A39]">mejores peluquerías</span>
                     de Lima en segundos
                 </h1>
 

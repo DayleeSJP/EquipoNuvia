@@ -4,15 +4,26 @@ import org.springframework.stereotype.Service;
 
 import com.utp.nuvia.dto.LoginRequest;
 import com.utp.nuvia.dto.LoginResponse;
+import com.utp.nuvia.dto.RegistroClienteRequest;
+import com.utp.nuvia.model.Rol;
 import com.utp.nuvia.model.Usuario;
+import com.utp.nuvia.repository.RolRepository;
 import com.utp.nuvia.repository.UsuarioRepository;
+
+import java.time.LocalDateTime;
 
 @Service
 public class AuthService {
-    private final UsuarioRepository usuarioRepository;
 
-    public AuthService(UsuarioRepository usuarioRepository) {
+    private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+
+    public AuthService(
+            UsuarioRepository usuarioRepository,
+            RolRepository rolRepository
+    ) {
         this.usuarioRepository = usuarioRepository;
+        this.rolRepository = rolRepository;
     }
 
     public LoginResponse loginCliente(LoginRequest request) {
@@ -32,9 +43,41 @@ public class AuthService {
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getApellido(),
+                usuario.getTelefono(),
                 usuario.getEmail(),
                 usuario.getRol().getNombre(),
                 "Login exitoso"
+        );
+    }
+
+    public LoginResponse registrarCliente(RegistroClienteRequest request) {
+
+        if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("El correo ya está registrado");
+        }
+
+        Rol rolCliente = rolRepository.findByNombre("CLIENTE")
+                .orElseThrow(() -> new RuntimeException("No existe el rol CLIENTE"));
+
+        Usuario usuario = new Usuario();
+        usuario.setNombre(request.getNombre());
+        usuario.setApellido(request.getApellido());
+        usuario.setTelefono(request.getTelefono());
+        usuario.setEmail(request.getEmail());
+        usuario.setPassword(request.getPassword());
+        usuario.setRol(rolCliente);
+        usuario.setFechaRegistro(LocalDateTime.now());
+
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+        return new LoginResponse(
+                usuarioGuardado.getId(),
+                usuarioGuardado.getNombre(),
+                usuarioGuardado.getApellido(),
+                usuarioGuardado.getTelefono(),
+                usuarioGuardado.getEmail(),
+                usuarioGuardado.getRol().getNombre(),
+                "Cliente registrado correctamente"
         );
     }
 }
