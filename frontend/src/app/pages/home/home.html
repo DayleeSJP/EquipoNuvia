@@ -12,27 +12,29 @@
 
                 <!-- NAV CENTRO -->
                 <nav class="hidden md:flex gap-8 text-[14px] text-[#7B6B66]">
-                    <a class="text-[#C98044] underline underline-offset-2" href="#">Inicio</a>
-                    <a href="#clientes">Para Clientes</a>
-                    <a href="#negocios">Para Negocios</a>
+                    <a class="text-[#C98044] underline underline-offset-2 transition-colors duration-200 hover:text-[#745A39]"
+                        href="#">Inicio</a>
+                    <a class="transition-colors duration-200 hover:text-[#745A39]" href="#clientes">Para Clientes</a>
+                    <a class="transition-colors duration-200 hover:text-[#745A39]" href="#negocios">Para Negocios</a>
                 </nav>
 
                 <!-- DERECHA -->
                 <div class="hidden md:flex items-center gap-3 text-[14px] relative">
 
                     <a routerLink="/registro-negocio"
-                        class="h-10 px-6 rounded-full border border-[#D8C9BF] text-[#7B6B66] flex items-center bg-[#F9F2EC]">
+                        class="h-10 px-6 rounded-full border border-[#D8C9BF] text-[#7B6B66] flex items-center bg-[#F9F2EC] transition-colors duration-200 hover:bg-[#E6D4BD] hover:text-[#4A352E]">
                         Registra tu negocio
                     </a>
 
                     <!-- SI NO HAY SESIÓN -->
                     <ng-container *ngIf="!usuarioActual">
-                        <a routerLink="/seleccion-usuario" class="text-[#6F625D] cursor-pointer">
+                        <a routerLink="/seleccion-usuario"
+                            class="h-10 px-6 rounded-full border border-[#D8C9BF] text-[#7B6B66] flex items-center bg-[#F9F2EC] transition-colors duration-200 hover:bg-[#E6D4BD] hover:text-[#4A352E]">
                             Iniciar sesión
                         </a>
 
                         <a routerLink="/registro-cliente"
-                            class="h-10 px-6 rounded-full bg-[#4A352E] text-white font-semibold flex items-center">
+                            class="h-10 px-6 rounded-full bg-[#4A352E] text-white font-semibold flex items-center transition-colors duration-200 hover:bg-[#3c2f27] hover:text-[#ffffff]">
                             Registro
                         </a>
                     </ng-container>
