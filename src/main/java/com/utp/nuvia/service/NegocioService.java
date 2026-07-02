@@ -28,8 +28,7 @@ public class NegocioService {
             PeluqueriaRepository peluqueriaRepository,
             CategoriaRepository categoriaRepository,
             ServicioRepository servicioRepository,
-            TrabajadorRepository trabajadorRepository
-    ) {
+            TrabajadorRepository trabajadorRepository) {
         this.usuarioRepository = usuarioRepository;
         this.peluqueriaRepository = peluqueriaRepository;
         this.categoriaRepository = categoriaRepository;
@@ -93,7 +92,8 @@ public class NegocioService {
                         });
 
                 if (categoriaRequest.getServicios() != null) {
-                    for (PersonalizacionNegocioRequest.ServicioRequest servicioRequest : categoriaRequest.getServicios()) {
+                    for (PersonalizacionNegocioRequest.ServicioRequest servicioRequest : categoriaRequest
+                            .getServicios()) {
                         Servicio servicio = new Servicio();
                         servicio.setPeluqueria(peluqueria);
                         servicio.setCategoria(categoria);
@@ -128,16 +128,22 @@ public class NegocioService {
         List<CatalogoPeluqueriaResponse> response = new ArrayList<>();
 
         for (Peluqueria peluqueria : peluquerias) {
-            int totalServicios = servicioRepository.findByPeluqueriaId(peluqueria.getId()).size();
+            List<Servicio> servicios = servicioRepository.findByPeluqueriaId(peluqueria.getId());
+
+            List<String> nombresServicios = servicios
+                    .stream()
+                    .map(servicio -> servicio.getNombre().toLowerCase())
+                    .toList();
 
             response.add(new CatalogoPeluqueriaResponse(
                     peluqueria.getId(),
                     peluqueria.getNombre(),
                     peluqueria.getDireccion() + ", " + peluqueria.getDistrito(),
-                    "Peluquería · " + totalServicios + " servicios",
+                    peluqueria.getDistrito(),
+                    "Peluquería · " + servicios.size() + " servicios",
                     "4,8",
-                    peluqueria.getImagenLogo()
-            ));
+                    peluqueria.getImagenLogo(),
+                    nombresServicios));
         }
 
         return response;
@@ -166,8 +172,7 @@ public class NegocioService {
 
             for (Servicio servicio : servicios) {
                 if (servicio.getCategoria().getId().equals(categoria.getId())) {
-                    DetallePeluqueriaResponse.ServicioDetalle servicioDetalle =
-                            new DetallePeluqueriaResponse.ServicioDetalle();
+                    DetallePeluqueriaResponse.ServicioDetalle servicioDetalle = new DetallePeluqueriaResponse.ServicioDetalle();
 
                     servicioDetalle.setId(servicio.getId());
                     servicioDetalle.setNombre(servicio.getNombre());
@@ -181,8 +186,7 @@ public class NegocioService {
             }
 
             if (!serviciosCategoria.isEmpty()) {
-                DetallePeluqueriaResponse.CategoriaDetalle categoriaDetalle =
-                        new DetallePeluqueriaResponse.CategoriaDetalle();
+                DetallePeluqueriaResponse.CategoriaDetalle categoriaDetalle = new DetallePeluqueriaResponse.CategoriaDetalle();
 
                 categoriaDetalle.setId(categoria.getId());
                 categoriaDetalle.setNombre(categoria.getNombre());
@@ -196,8 +200,7 @@ public class NegocioService {
         List<DetallePeluqueriaResponse.TrabajadorDetalle> trabajadoresDetalle = new ArrayList<>();
 
         for (Trabajador trabajador : trabajadores) {
-            DetallePeluqueriaResponse.TrabajadorDetalle trabajadorDetalle =
-                    new DetallePeluqueriaResponse.TrabajadorDetalle();
+            DetallePeluqueriaResponse.TrabajadorDetalle trabajadorDetalle = new DetallePeluqueriaResponse.TrabajadorDetalle();
 
             trabajadorDetalle.setId(trabajador.getId());
             trabajadorDetalle.setNombre(trabajador.getNombre());
@@ -213,15 +216,23 @@ public class NegocioService {
     }
 
     private Integer convertirDuracionAMinutos(String duracion) {
-        if (duracion == null || duracion.isBlank()) return 45;
+        if (duracion == null || duracion.isBlank())
+            return 45;
 
-        if (duracion.contains("2 h")) return 120;
-        if (duracion.contains("1 h y 30")) return 90;
-        if (duracion.contains("1 h y 15")) return 75;
-        if (duracion.contains("1 h")) return 60;
-        if (duracion.contains("45")) return 45;
-        if (duracion.contains("35")) return 35;
-        if (duracion.contains("30")) return 30;
+        if (duracion.contains("2 h"))
+            return 120;
+        if (duracion.contains("1 h y 30"))
+            return 90;
+        if (duracion.contains("1 h y 15"))
+            return 75;
+        if (duracion.contains("1 h"))
+            return 60;
+        if (duracion.contains("45"))
+            return 45;
+        if (duracion.contains("35"))
+            return 35;
+        if (duracion.contains("30"))
+            return 30;
 
         return 45;
     }

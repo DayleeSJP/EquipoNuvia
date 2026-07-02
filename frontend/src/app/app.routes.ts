@@ -40,6 +40,7 @@ export const routes: Routes = [
     { path: 'catalogo/detalle/:id', component: DetalleNegocio },
 
     { path: 'cliente/reserva', component: ReservaCita },
+    { path: 'cliente/reserva/:id', component: ReservaCita },
     { path: 'cliente/mis-reservas', component: HistorialReservas },
 
 

@@ -6,9 +6,11 @@ export interface SalonCard {
   id?: number;
   nombre: string;
   direccion: string;
+  distrito?: string;
   tipo: string;
   rating: string;
   imagen: string;
+  servicios?: string[];
 }
 
 @Injectable({

@@ -8,8 +8,8 @@ interface Servicio {
   nombre: string;
   descripcion: string;
   categoriaId: number;
-  tipoTratamiento: string;
-  tipoPrecio: string;
+  tipoTratamiento?: string;
+  tipoPrecio?: string;
   precio: number;
   duracion: string;
 }
@@ -17,12 +17,13 @@ interface Servicio {
 interface Categoria {
   id: number;
   nombre: string;
-  descripcion: string;
-  color: string;
+  descripcion?: string;
+  color?: string;
   servicios: Servicio[];
 }
 
 interface Trabajador {
+  id?: number;
   nombre: string;
   apellido: string;
 }
@@ -34,6 +35,8 @@ interface Trabajador {
   styleUrl: './detalle-negocio.css'
 })
 export class DetalleNegocio implements OnInit {
+
+  peluqueriaId: number | null = null;
 
   nombreNegocio = 'Mi Negocio';
   direccion = 'Dirección pendiente';
@@ -48,31 +51,35 @@ export class DetalleNegocio implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private catalogoService: CatalogoService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (id) {
-      this.catalogoService.obtenerDetalle(id).subscribe({
-        next: (data: any) => {
-          this.nombreNegocio = data.nombreNegocio || 'Mi Negocio';
-          this.direccion = data.direccion || 'Dirección pendiente';
-          this.distrito = data.distrito || 'Lima';
-          this.portada = data.portada || '';
-          this.categorias = data.categorias || [];
-          this.trabajadores = data.trabajadores || [];
-          this.sobreNosotros = data.sobreNosotros || '';
-        },
-        error: () => {
-          this.cargarDetalleLocal();
-        }
-      });
-
+      this.peluqueriaId = id;
+      this.cargarDetalleDesdeBackend(id);
       return;
     }
 
     this.cargarDetalleLocal();
+  }
+
+  cargarDetalleDesdeBackend(id: number): void {
+    this.catalogoService.obtenerDetalle(id).subscribe({
+      next: (data: any) => {
+        this.nombreNegocio = data.nombreNegocio || 'Mi Negocio';
+        this.direccion = data.direccion || 'Dirección pendiente';
+        this.distrito = data.distrito || 'Lima';
+        this.portada = data.portada || '';
+        this.sobreNosotros = data.sobreNosotros || '';
+        this.categorias = data.categorias || [];
+        this.trabajadores = data.trabajadores || [];
+      },
+      error: () => {
+        this.cargarDetalleLocal();
+      }
+    });
   }
 
   cargarDetalleLocal(): void {
@@ -81,9 +88,10 @@ export class DetalleNegocio implements OnInit {
     if (salonSeleccionado) {
       const salon = JSON.parse(salonSeleccionado);
 
+      this.peluqueriaId = salon.id || null;
       this.nombreNegocio = salon.nombre || 'Mi Negocio';
       this.direccion = salon.direccion || 'Dirección pendiente';
-      this.distrito = '';
+      this.distrito = salon.distrito || '';
       this.portada = salon.imagen || '';
 
       return;
@@ -94,6 +102,7 @@ export class DetalleNegocio implements OnInit {
 
     if (negocioGuardado) {
       const negocio = JSON.parse(negocioGuardado);
+
       this.nombreNegocio = negocio.nombreNegocio || 'Mi Negocio';
       this.direccion = negocio.direccion || 'Dirección pendiente';
       this.distrito = negocio.distrito || 'Lima';
@@ -101,6 +110,7 @@ export class DetalleNegocio implements OnInit {
 
     if (personalizacionGuardada) {
       const personalizacion = JSON.parse(personalizacionGuardada);
+
       this.portada = personalizacion.portada || '';
       this.categorias = personalizacion.categorias || [];
       this.trabajadores = personalizacion.trabajadores || [];
@@ -108,9 +118,10 @@ export class DetalleNegocio implements OnInit {
     }
   }
 
-
   totalServicios(): number {
-    return this.categorias.reduce((total, categoria) => total + categoria.servicios.length, 0);
+    return this.categorias.reduce((total, categoria) => {
+      return total + categoria.servicios.length;
+    }, 0);
   }
 
   reservar(servicio?: Servicio): void {
@@ -118,6 +129,11 @@ export class DetalleNegocio implements OnInit {
       localStorage.setItem('servicioSeleccionadoTemp', JSON.stringify(servicio));
     } else {
       localStorage.removeItem('servicioSeleccionadoTemp');
+    }
+
+    if (this.peluqueriaId) {
+      this.router.navigate(['/cliente/reserva', this.peluqueriaId]);
+      return;
     }
 
     this.router.navigate(['/cliente/reserva']);

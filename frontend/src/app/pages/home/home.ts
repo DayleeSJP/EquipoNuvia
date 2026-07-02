@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CatalogoService, SalonCard } from '../../services/catalogo';
+import { FormsModule } from '@angular/forms';
 
 /*
 interface SalonCard {
@@ -14,7 +15,7 @@ interface SalonCard {
 */
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -22,6 +23,14 @@ export class Home implements OnInit {
 
   usuarioActual: any = null;
   menuPerfilAbierto = false;
+  catalogoCompleto: SalonCard[] = [];
+
+  ubicacionSeleccionada = '';
+  servicioSeleccionado = '';
+  fechaSeleccionada = '';
+
+  busquedaRealizada = false;
+  sinResultados = false;
 
   constructor(
     private catalogoService: CatalogoService,
@@ -51,15 +60,79 @@ export class Home implements OnInit {
   cargarCatalogo(): void {
     this.catalogoService.listarPeluquerias().subscribe({
       next: (data: SalonCard[]) => {
-        if (data.length > 0) {
-          this.recomendados = data;
-          this.nuevos = data;
+        console.log('CATÁLOGO DESDE BACKEND:', data);
+
+        if (data && data.length > 0) {
+          this.catalogoCompleto = [...data];
+          this.recomendados = [...data];
+          this.nuevos = [...data];
+        } else {
+          this.catalogoCompleto = [...this.recomendados];
+          this.nuevos = [...this.recomendados];
         }
+
+        this.busquedaRealizada = false;
+        this.sinResultados = false;
       },
-      error: () => {
-        console.log('No se pudo cargar el catálogo desde el backend. Se muestran datos de prueba.');
+      error: (error) => {
+        console.log('ERROR AL CARGAR CATÁLOGO:', error);
+
+        this.catalogoCompleto = [...this.recomendados];
+        this.nuevos = [...this.recomendados];
+
+        this.busquedaRealizada = false;
+        this.sinResultados = false;
       }
     });
+  }
+
+  buscarCatalogo(): void {
+    let resultado = [...this.catalogoCompleto];
+
+    if (this.ubicacionSeleccionada.trim()) {
+      resultado = resultado.filter(card =>
+        this.normalizarTexto(card.distrito || card.direccion || '').includes(
+          this.normalizarTexto(this.ubicacionSeleccionada)
+        )
+      );
+    }
+
+    if (this.servicioSeleccionado.trim()) {
+      resultado = resultado.filter(card =>
+        card.servicios?.some(servicio =>
+          this.normalizarTexto(servicio).includes(
+            this.normalizarTexto(this.servicioSeleccionado)
+          )
+        )
+      );
+    }
+
+    this.recomendados = resultado;
+    this.nuevos = resultado;
+
+    this.busquedaRealizada = true;
+    this.sinResultados = resultado.length === 0;
+  }
+
+
+  normalizarTexto(texto: string): string {
+    return texto
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
+  limpiarFiltros(): void {
+    this.ubicacionSeleccionada = '';
+    this.servicioSeleccionado = '';
+    this.fechaSeleccionada = '';
+
+    this.recomendados = [...this.catalogoCompleto];
+    this.nuevos = [...this.catalogoCompleto];
+
+    this.busquedaRealizada = false;
+    this.sinResultados = false;
   }
 
   toggleMenuPerfil(): void {
