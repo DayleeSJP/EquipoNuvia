@@ -1,249 +1,208 @@
-<main class="flex-1 overflow-hidden p-5">
+<main class="flex-1 overflow-hidden p-5 bg-[#F8F9FC]">
 
-    <div class="grid h-full gap-4 lg:grid-cols-2 lg:grid-rows-[1fr_0.55fr]">
+  <div class="grid h-full gap-4 lg:grid-cols-2">
 
-        <!-- VENTAS RECIENTES -->
-        <article class="rounded-lg border border-[#DDE2EB] bg-white p-5 shadow-sm overflow-hidden">
+    <!-- ACTIVIDAD DE CITAS -->
+    <article class="rounded-lg border border-[#DDE2EB] bg-white shadow-sm overflow-hidden flex flex-col">
 
+      <div class="px-5 pt-5 pb-3 flex items-center justify-between border-b border-[#EEF1F5]">
+        <div>
+          <h2 class="text-[15px] font-bold leading-none text-[#071326]">
+            Actividad de citas
+          </h2>
+          <p class="mt-1 text-[11px] text-[#42506B]">
+            Hoy · 8 citas programadas
+          </p>
+        </div>
+        <button class="text-[11px] font-semibold text-[#8065FF] hover:underline transition-colors">
+          Ver todas →
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-5 space-y-3">
+
+        <!-- Cita 1 -->
+        <div class="flex items-start gap-3 p-3 rounded-lg border border-[#EEF1F5] transition-colors duration-200 hover:bg-[#F0E8FF] active:bg-[#D4C4FF] cursor-pointer">
+          <div class="w-12 h-12 rounded-full bg-[#E5DCFF] flex items-center justify-center text-[#8065FF] text-lg font-bold flex-shrink-0 transition-colors group-hover:bg-[#D4C4FF]">
+            10:00
+          </div>
+          <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between">
-                <div>
-                    <h2 class="text-[15px] font-bold leading-none text-[#071326]">
-                        Ventas recientes
-                    </h2>
-                    <p class="mt-1 text-[11px] text-[#42506B]">
-                        Últimos 7 días
-                    </p>
+              <div>
+                <p class="text-[13px] font-bold text-[#071326]">Manicura completa</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[10px] text-[#4E5A70]">Cliente: Sofia</span>
+                  <span class="w-1 h-1 rounded-full bg-[#DDE2EB]"></span>
+                  <span class="text-[10px] text-[#4E5A70]">60 min</span>
                 </div>
-
-                <button class="text-[#12315D] text-lg leading-none">
-                    ⋮
-                </button>
+              </div>
             </div>
-
-            <div class="mt-5">
-                <p class="text-[28px] font-extrabold leading-none tracking-[-0.04em]">
-                    0 PEN
-                </p>
-
-                <p class="mt-4 text-[12px] text-[#4B5871]">
-                    Citas 4
-                </p>
-
-                <p class="text-[11px] text-[#4B5871]">
-                    Valor de las citas
-                    <span class="font-bold text-[#071326]">172 PEN</span>
-                </p>
+            <div class="flex items-center gap-3 mt-2">
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Detalles</button>
+              <span class="w-px h-3 bg-[#DDE2EB]"></span>
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Cancelar</button>
             </div>
+          </div>
+        </div>
 
-            <!-- GRÁFICO SIMPLE -->
-            <div class="mt-6 h-[190px] w-full">
-                <svg viewBox="0 0 420 200" class="w-full h-full overflow-visible">
-
-                    <!-- líneas -->
-                    <line x1="0" y1="170" x2="400" y2="170" stroke="#E8ECF2" />
-                    <line x1="0" y1="130" x2="400" y2="130" stroke="#E8ECF2" />
-                    <line x1="0" y1="90" x2="400" y2="90" stroke="#E8ECF2" />
-                    <line x1="0" y1="50" x2="400" y2="50" stroke="#E8ECF2" />
-
-                    <!-- textos precios -->
-                    <text x="355" y="170" font-size="9" fill="#A2A8B6">0 PEN</text>
-                    <text x="350" y="130" font-size="9" fill="#A2A8B6">45 PEN</text>
-                    <text x="350" y="90" font-size="9" fill="#A2A8B6">90 PEN</text>
-                    <text x="345" y="50" font-size="9" fill="#A2A8B6">135 PEN</text>
-
-                    <!-- líneas de datos -->
-                    <polyline
-                        points="0,170 70,170 140,170 210,170 280,170 360,70 400,45"
-                        fill="none"
-                        stroke="#8065FF"
-                        stroke-width="5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round" />
-
-                    <polyline
-                        points="0,170 70,170 140,170 210,170 280,170 360,90 400,60"
-                        fill="none"
-                        stroke="#5BA06A"
-                        stroke-width="5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round" />
-
-                    <!-- días -->
-                    <text x="0" y="194" font-size="9" fill="#8B93A5">mié 24</text>
-                    <text x="65" y="194" font-size="9" fill="#8B93A5">jue 25</text>
-                    <text x="130" y="194" font-size="9" fill="#8B93A5">vie 26</text>
-                    <text x="195" y="194" font-size="9" fill="#8B93A5">sáb 27</text>
-                    <text x="260" y="194" font-size="9" fill="#8B93A5">dom 28</text>
-                    <text x="330" y="194" font-size="9" fill="#8B93A5">lun 29</text>
-
-                    <!-- leyenda -->
-                    <circle cx="5" cy="210" r="4" fill="#8065FF" />
-                    <text x="15" y="213" font-size="9" fill="#8B93A5">Ventas</text>
-
-                    <circle cx="70" cy="210" r="4" fill="#5BA06A" />
-                    <text x="80" y="213" font-size="9" fill="#8B93A5">Citas</text>
-
-                </svg>
-            </div>
-
-        </article>
-
-        <!-- PRÓXIMAS CITAS -->
-        <article class="rounded-lg border border-[#DDE2EB] bg-white p-5 shadow-sm overflow-hidden">
-
+        <!-- Cita 2 -->
+        <div class="flex items-start gap-3 p-3 rounded-lg border border-[#EEF1F5] transition-colors duration-200 hover:bg-[#F0E8FF] active:bg-[#D4C4FF] cursor-pointer">
+          <div class="w-12 h-12 rounded-full bg-[#E5DCFF] flex items-center justify-center text-[#8065FF] text-lg font-bold flex-shrink-0">
+            12:45
+          </div>
+          <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between">
-                <div>
-                    <h2 class="text-[15px] font-bold leading-none text-[#071326]">
-                        Próximas citas
-                    </h2>
-                    <p class="mt-1 text-[11px] text-[#42506B]">
-                        Próximos 7 días
-                    </p>
+              <div>
+                <p class="text-[13px] font-bold text-[#071326]">Corte de pelo</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[10px] text-[#4E5A70]">Cliente: Wendy</span>
+                  <span class="w-1 h-1 rounded-full bg-[#DDE2EB]"></span>
+                  <span class="text-[10px] text-[#4E5A70]">45 min</span>
                 </div>
-
-                <button class="text-[#12315D] text-lg leading-none">
-                    ⋮
-                </button>
+              </div>
             </div>
-
-            <div class="h-[250px] flex flex-col items-center justify-center text-center">
-                <div class="mb-5 w-14 h-14 rounded-full bg-[#E5DCFF] flex items-center justify-center text-[#8065FF] text-2xl">
-                    📊
-                </div>
-
-                <h3 class="text-[15px] font-bold tracking-[-0.02em]">
-                    Tu calendario está vacío
-                </h3>
-
-                <p class="mt-2 text-[11px] text-[#4E5A70] max-w-[260px]">
-                    Reserva algunas citas para que aparezcan datos en el calendario.
-                </p>
+            <div class="flex items-center gap-3 mt-2">
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Detalles</button>
+              <span class="w-px h-3 bg-[#DDE2EB]"></span>
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Iniciar</button>
             </div>
+          </div>
+        </div>
 
-        </article>
-
-        <!-- ACTIVIDAD DE CITAS -->
-        <article class="rounded-lg border border-[#DDE2EB] bg-white px-5 pt-5 shadow-sm overflow-hidden">
-
-            <h2 class="text-[15px] font-bold leading-none text-[#071326]">
-                Actividad de citas
-            </h2>
-
-            <div class="mt-4">
-
-                <div class="flex border-b border-[#EEF1F5] py-3">
-                    <div class="w-[48px] shrink-0 text-center">
-                        <div class="text-[17px] font-bold leading-none">01</div>
-                        <div class="mt-1 text-[9px] font-bold text-[#3C4658]">JUL.</div>
-                    </div>
-
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center gap-2 text-[10px] text-[#4E5A70]">
-                            <span>mié., 1 jul. 2026 12:45</span>
-                            <span class="rounded bg-[#EEF4FF] px-2 py-0.5 text-[9px] font-bold text-[#2368FF]">
-                                Reservada
-                            </span>
-                        </div>
-
-                        <div class="mt-1 text-[12px] font-bold leading-none">
-                            Corte de pelo
-                        </div>
-
-                        <div class="mt-2 text-[10px] text-[#2D3B50]">
-                            Sin cita, 45 min con Wendy
-                        </div>
-                    </div>
+        <!-- Cita 3 -->
+        <div class="flex items-start gap-3 p-3 rounded-lg border border-[#EEF1F5] transition-colors duration-200 hover:bg-[#F0E8FF] active:bg-[#D4C4FF] cursor-pointer">
+          <div class="w-12 h-12 rounded-full bg-[#E5DCFF] flex items-center justify-center text-[#8065FF] text-lg font-bold flex-shrink-0">
+            13:00
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-[13px] font-bold text-[#071326]">Tratamiento facial</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[10px] text-[#4E5A70]">Cliente: Lucia</span>
+                  <span class="w-1 h-1 rounded-full bg-[#DDE2EB]"></span>
+                  <span class="text-[10px] text-[#4E5A70]">60 min</span>
                 </div>
-
-                <div class="flex border-b border-[#EEF1F5] py-3">
-                    <div class="w-[48px] shrink-0 text-center">
-                        <div class="text-[17px] font-bold leading-none">01</div>
-                        <div class="mt-1 text-[9px] font-bold text-[#3C4658]">JUL.</div>
-                    </div>
-
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center gap-2 text-[10px] text-[#4E5A70]">
-                            <span>mié., 1 jul. 2026 10:00</span>
-                            <span class="rounded bg-[#EEF4FF] px-2 py-0.5 text-[9px] font-bold text-[#2368FF]">
-                                Reservada
-                            </span>
-                        </div>
-
-                        <div class="mt-1 text-[12px] font-bold leading-none">
-                            Manicura completa
-                        </div>
-
-                        <div class="mt-2 text-[10px] text-[#2D3B50]">
-                            Con cita, 60 min con Sofía
-                        </div>
-                    </div>
-                </div>
-
+              </div>
             </div>
-
-        </article>
-
-        <!-- CITAS DE HOY -->
-        <article class="rounded-lg border border-[#DDE2EB] bg-white px-5 pt-5 shadow-sm overflow-hidden">
-
-            <h2 class="text-[15px] font-bold leading-none text-[#071326]">
-                Próximas citas de hoy
-            </h2>
-
-            <div class="mt-4">
-
-                <div class="flex border-b border-[#EEF1F5] py-3">
-                    <div class="w-[48px] shrink-0 text-center">
-                        <div class="text-[17px] font-bold leading-none">01</div>
-                        <div class="mt-1 text-[9px] font-bold text-[#3C4658]">JUL.</div>
-                    </div>
-
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center gap-2 text-[10px] text-[#4E5A70]">
-                            <span>mié., 12:45</span>
-                            <span class="rounded bg-[#EEF4FF] px-2 py-0.5 text-[9px] font-bold text-[#2368FF]">
-                                Reservada
-                            </span>
-                        </div>
-
-                        <div class="mt-1 text-[12px] font-bold leading-none">
-                            Corte de pelo
-                        </div>
-
-                        <div class="mt-2 text-[10px] text-[#2D3B50]">
-                            Sin cita, 45 min con Wendy
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex py-3">
-                    <div class="w-[48px] shrink-0 text-center">
-                        <div class="text-[17px] font-bold leading-none">01</div>
-                        <div class="mt-1 text-[9px] font-bold text-[#3C4658]">JUL.</div>
-                    </div>
-
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center gap-2 text-[10px] text-[#4E5A70]">
-                            <span>mié., 13:00</span>
-                            <span class="rounded bg-[#EEF4FF] px-2 py-0.5 text-[9px] font-bold text-[#2368FF]">
-                                Reservada
-                            </span>
-                        </div>
-
-                        <div class="mt-1 text-[12px] font-bold leading-none">
-                            Tratamiento facial
-                        </div>
-
-                        <div class="mt-2 text-[10px] text-[#2D3B50]">
-                            60 min con Lucia
-                        </div>
-                    </div>
-                </div>
-
+            <div class="flex items-center gap-3 mt-2">
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Detalles</button>
+              <span class="w-px h-3 bg-[#DDE2EB]"></span>
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Cancelar</button>
             </div>
+          </div>
+        </div>
 
-        </article>
+        <!-- Cita 4 -->
+        <div class="flex items-start gap-3 p-3 rounded-lg border border-[#EEF1F5] transition-colors duration-200 hover:bg-[#F0E8FF] active:bg-[#D4C4FF] cursor-pointer">
+          <div class="w-12 h-12 rounded-full bg-[#E5DCFF] flex items-center justify-center text-[#8065FF] text-lg font-bold flex-shrink-0">
+            15:30
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-[13px] font-bold text-[#071326]">Coloración</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[10px] text-[#4E5A70]">Cliente: Carlos</span>
+                  <span class="w-1 h-1 rounded-full bg-[#DDE2EB]"></span>
+                  <span class="text-[10px] text-[#4E5A70]">90 min</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 mt-2">
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Detalles</button>
+              <span class="w-px h-3 bg-[#DDE2EB]"></span>
+              <button class="text-[10px] font-medium text-[#8065FF] hover:text-[#6B4FD6] transition-colors hover:underline">Iniciar</button>
+            </div>
+          </div>
+        </div>
 
-    </div>
+      </div>
+    </article>
+
+    <!-- PRÓXIMAS CITAS DE HOY -->
+    <article class="rounded-lg border border-[#DDE2EB] bg-white shadow-sm overflow-hidden flex flex-col">
+
+      <div class="px-5 pt-5 pb-3 flex items-center justify-between border-b border-[#EEF1F5]">
+        <div>
+          <h2 class="text-[15px] font-bold leading-none text-[#071326]">
+            Próximas citas de hoy
+          </h2>
+          <p class="mt-1 text-[11px] text-[#42506B]">
+            4 citas restantes
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="p-1.5 rounded hover:bg-[#F0E8FF] active:bg-[#D4C4FF] transition-colors duration-200">
+            <svg class="w-4 h-4 text-[#42506B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <span class="text-[11px] text-[#42506B] font-medium">Hoy</span>
+          <button class="p-1.5 rounded hover:bg-[#F0E8FF] active:bg-[#D4C4FF] transition-colors duration-200">
+            <svg class="w-4 h-4 text-[#42506B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-5 space-y-3">
+
+        <!-- Cita 1 -->
+        <div class="flex items-center gap-3 p-3 rounded-lg border border-[#EEF1F5] transition-colors duration-200 hover:bg-[#F0E8FF] active:bg-[#D4C4FF] cursor-pointer">
+          <div class="text-center flex-shrink-0 w-14">
+            <div class="text-[11px] font-bold text-[#42506B]">12:45</div>
+            <div class="text-[9px] text-[#8B93A5]">mié, 01 jul</div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[12px] font-bold text-[#071326]">Corte de pelo</p>
+            <p class="text-[10px] text-[#4E5A70]">Wendy · 45 min</p>
+          </div>
+          <button class="p-1.5 rounded hover:bg-white active:bg-[#E8DDFF] transition-colors duration-200 text-[#8065FF] hover:text-[#6B4FD6]">
+            ▶
+          </button>
+        </div>
+
+        <!-- Cita 2 -->
+        <div class="flex items-center gap-3 p-3 rounded-lg border border-[#EEF1F5] transition-colors duration-200 hover:bg-[#F0E8FF] active:bg-[#D4C4FF] cursor-pointer">
+          <div class="text-center flex-shrink-0 w-14">
+            <div class="text-[11px] font-bold text-[#42506B]">13:00</div>
+            <div class="text-[9px] text-[#8B93A5]">mié, 01 jul</div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[12px] font-bold text-[#071326]">Tratamiento facial</p>
+            <p class="text-[10px] text-[#4E5A70]">Lucia · 60 min</p>
+          </div>
+          <button class="p-1.5 rounded hover:bg-white active:bg-[#E8DDFF] transition-colors duration-200 text-[#8065FF] hover:text-[#6B4FD6]">
+            ▶
+          </button>
+        </div>
+
+        <!-- Cita 3 -->
+        <div class="flex items-center gap-3 p-3 rounded-lg border border-[#EEF1F5] transition-colors duration-200 hover:bg-[#F0E8FF] active:bg-[#D4C4FF] cursor-pointer">
+          <div class="text-center flex-shrink-0 w-14">
+            <div class="text-[11px] font-bold text-[#42506B]">15:30</div>
+            <div class="text-[9px] text-[#8B93A5]">mié, 01 jul</div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[12px] font-bold text-[#071326]">Coloración</p>
+            <p class="text-[10px] text-[#4E5A70]">Carlos · 90 min</p>
+          </div>
+          <button class="p-1.5 rounded hover:bg-white active:bg-[#E8DDFF] transition-colors duration-200 text-[#8065FF] hover:text-[#6B4FD6]">
+            ▶
+          </button>
+        </div>
+
+        <!-- Botón para ver más -->
+        <button class="w-full mt-2 py-2 text-[11px] font-medium text-[#8065FF] hover:bg-[#F0E8FF] active:bg-[#D4C4FF] rounded-lg transition-colors duration-200 border border-dashed border-[#DDE2EB]">
+          Ver todas las citas del día →
+        </button>
+
+      </div>
+
+    </article>
+
+  </div>
 
 </main>
